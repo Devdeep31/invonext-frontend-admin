@@ -1,0 +1,25 @@
+/* For WebKit browsers (Chrome, Safari, etc.) */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+/* For Firefox */
+.custom-scrollbar {
+    scrollbar-width: none; /* Hides scrollbar */
+}
+
+/* General style for tables */
+.custom-scrollbar {
+    overflow-y: scroll;  /* Enables vertical scrolling */
+    height: 200px; /* Example height - adjust as needed */
+    position: relative;
+}
+
+/* Ensures that the header stays in place */
+thead th {
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 2;
+}
