@@ -52,9 +52,15 @@ const Sidebar = () => {
           </Link>
         </li>
         <li className="p-2">
-          <Link to="" className="hover:bg-gray-700 block p-2 rounded text-m flex items-center">
+          <Link to="/inventory" className="hover:bg-gray-700 block p-2 rounded text-m flex items-center">
             <i className="bx bx-package"></i>
             {!isCollapsed && <span className="ml-2">Inventory</span>}
+          </Link>
+        </li>
+        <li className="p-2">
+          <Link to="/staff" className="hover:bg-gray-700 block p-2 rounded text-m flex items-center">
+          <i class='bx bx-street-view'></i>
+            {!isCollapsed && <span className="ml-2">Staff</span>}
           </Link>
         </li>
       </ul>

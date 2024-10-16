@@ -3,7 +3,7 @@ import Navbar from './Navbar';
 import Bot from '../Resources/AI_BOT.png'
 import { Outlet } from 'react-router-dom';
 
-const DashBoard =()=>{
+const Application =()=>{
     return(
         <>
         <div className='flex h-screen'>
@@ -22,4 +22,4 @@ const DashBoard =()=>{
       </>
     );
 }
-export default DashBoard;
+export default Application;

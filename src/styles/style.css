@@ -12,7 +12,7 @@
 /* General style for tables */
 .custom-scrollbar {
     overflow-y: scroll;  /* Enables vertical scrolling */
-    height: 200px; /* Example height - adjust as needed */
+    height: 400px; /* Example height - adjust as needed */
     position: relative;
 }
 
