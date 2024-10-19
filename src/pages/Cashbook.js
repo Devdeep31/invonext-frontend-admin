@@ -1,9 +1,11 @@
-import { useEffect,useState } from 'react';
+import { useEffect, useState } from 'react';
 import Dropdown from '../components/scripts/Dropdown';
 import DatePicker from '../components/scripts/Datepicker';
 import { Formik, Form, Field, handleChange, value } from 'formik';
 import { myAxios } from '../services/Helper';
 import useFetch from '../Hooks/useFetch';
+import { initFlowbite } from 'flowbite'
+
 
 
 export default function CashBook() {
@@ -12,64 +14,67 @@ export default function CashBook() {
     const { date, error, handleDateChange } = DatePicker();
 
     useEffect(() => {
+
+        initFlowbite();
         // Get buttons and drawers
-        const drawerButtonIn = document.querySelector("[data-drawer-show='drawer-contact-in']");
-        const drawerButtonOut = document.querySelector("[data-drawer-show='drawer-contact-out']");
-        const drawerIn = document.getElementById('drawer-contact-in');
-        const drawerOut = document.getElementById('drawer-contact-out');
-        const closeButtonIn = document.querySelector("[data-drawer-hide='drawer-contact-in']");
-        const closeButtonOut = document.querySelector("[data-drawer-hide='drawer-contact-out']");
+        // const drawerButtonIn = document.querySelector("[data-drawer-show='drawer-contact-in']");
+        // const drawerButtonOut = document.querySelector("[data-drawer-show='drawer-contact-out']");
+        // const drawerIn = document.getElementById('drawer-contact-in');
+        // const drawerOut = document.getElementById('drawer-contact-out');
+        // const closeButtonIn = document.querySelector("[data-drawer-hide='drawer-contact-in']");
+        // const closeButtonOut = document.querySelector("[data-drawer-hide='drawer-contact-out']");
 
-        // Functions to show/hide the drawers
-        const showDrawerIn = () => {
-            drawerIn.style.transform = 'translateX(0)';
-        };
-        const hideDrawerIn = () => {
-            drawerIn.style.transform = 'translateX(100%)';
-        };
+        // // Functions to show/hide the drawers
+        // const showDrawerIn = () => {
+        //     drawerIn.style.transform = 'translateX(0)';
+        // };
+        // const hideDrawerIn = () => {
+        //     drawerIn.style.transform = 'translateX(100%)';
+        // };
 
-        const showDrawerOut = () => {
-            drawerOut.style.transform = 'translateX(0)';
-        };
-        const hideDrawerOut = () => {
-            drawerOut.style.transform = 'translateX(100%)';
-        };
+        // const showDrawerOut = () => {
+        //     drawerOut.style.transform = 'translateX(0)';
+        // };
+        // const hideDrawerOut = () => {
+        //     drawerOut.style.transform = 'translateX(100%)';
+        // };
 
-        // Add event listeners to buttons
-        drawerButtonIn.addEventListener('click', showDrawerIn);
-        drawerButtonOut.addEventListener('click', showDrawerOut);
-        closeButtonIn.addEventListener('click', hideDrawerIn);
-        closeButtonOut.addEventListener('click', hideDrawerOut);
+        // // Add event listeners to buttons
+        // drawerButtonIn.addEventListener('click', showDrawerIn);
+        // drawerButtonOut.addEventListener('click', showDrawerOut);
+        // closeButtonIn.addEventListener('click', hideDrawerIn);
+        // closeButtonOut.addEventListener('click', hideDrawerOut);
 
-        // Cleanup function to remove listeners when component unmounts
-        return () => {
-            drawerButtonIn.removeEventListener('click', showDrawerIn);
-            drawerButtonOut.removeEventListener('click', showDrawerOut);
-            closeButtonIn.removeEventListener('click', hideDrawerIn);
-            closeButtonOut.removeEventListener('click', hideDrawerOut);
-        };
+        // // Cleanup function to remove listeners when component unmounts
+        // return () => {
+        //     drawerButtonIn.removeEventListener('click', showDrawerIn);
+        //     drawerButtonOut.removeEventListener('click', showDrawerOut);
+        //     closeButtonIn.removeEventListener('click', hideDrawerIn);
+        //     closeButtonOut.removeEventListener('click', hideDrawerOut);
+        // };
+
     }, []);
 
 
     //const [customers, setCustomers] = useState([]);
     const [filteredEntries, setfilteredEntries] = useState([]); //need to add get data
-   // const [searchQuery, setSearchQuery] = useState("");
+    // const [searchQuery, setSearchQuery] = useState("");
     //const [selectedCustomer,setSelectedCustomer] = useState(null);
     const [data, loading] = useFetch('/cashbook/cashbooks');
-    
+
     //Pagination . .
     const [currentPage, setCurrentPage] = useState(1);
-    const entryPage = 5;
+    const entryPage = 8;
     const indexOfLastEntry = currentPage * entryPage;
     const indexOfFirstEntry = indexOfLastEntry - entryPage;
-    const currentEntries = filteredEntries.slice(indexOfFirstEntry, indexOfLastEntry);
+    const currentEntries = data.slice(indexOfFirstEntry, indexOfLastEntry);
     const totalPages = Math.ceil(filteredEntries.length / entryPage);
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     //////////////////////////////////////////////////////////////////////////////////////////
 
-    
+
     //console.log(data);
 
     //add Entry to the cashbook
@@ -111,6 +116,18 @@ export default function CashBook() {
             }
         } catch (error) {
             console.log(error);
+            alert(error);
+        }
+    }
+
+    const [selectedNote, setSelectedNote] = useState({});
+
+    async function editNote(val) {
+        try {
+            const response = await myAxios.get('/cashbook/' + val);
+            setSelectedNote(response.data);
+            // console.log(selectedNote.amount);
+        } catch (error) {
             alert(error);
         }
     }
@@ -215,7 +232,7 @@ export default function CashBook() {
 
 
                 <div class="relative overflow-x-auto custom-scrollbar">
-                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    <table class="w-full text-sm text-center text-left rtl:text-right text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
 
                             <tr>
@@ -234,16 +251,19 @@ export default function CashBook() {
                                 <th scope="col" class="px-6 py-3">
                                     Date
                                 </th>
+                                <th>
+                                    Action
+                                </th>
 
                             </tr>
                         </thead>
                         <tbody>
-                            {data.map((e) => (
+                            {currentEntries.map((e) => (
                                 <>
                                     {/* {console.log(e.amount)} */}
 
 
-                                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                    <tr key={e.cashbook_id} class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                         <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                             {/* name */}
                                             {e.description}
@@ -266,42 +286,209 @@ export default function CashBook() {
                                         <td className='px-6 py-4 text-gray-900 font-medium'>
                                             {e.date}
                                         </td>
+                                        <td>
+                                            <button
+                                                onClick={() => editNote(e.cashbook_id)}
+                                                data-modal-target="editEntries-modal"
+                                                data-modal-toggle="editEntries-modal"
+                                                className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                                            >
+                                                Edit
+                                            </button>
+                                        </td>
 
                                     </tr>
                                 </>
                             ))}
                         </tbody>
                     </table>
+                    <button data-modal-target="editEntries-modal"
+                        data-modal-toggle="editEntries-modal"
+                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline">modal</button>
+                    {/* Modal for edit cashbook entries */}
+                    <div id="editEntries-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
 
+                        <div class="relative p-4 w-full max-w-2xl max-h-full bg-white">
+                            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                                    Update Entry
+                                </h3>
+                                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="editEntries-modal">
+                                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                    </svg>
+                                    <span class="sr-only">Close modal</span>
+                                </button>
+                            </div>
+                            {/* <!-- Modal content --> */}
+                            <Formik
+                                initialValues={initialState_IN}
+                                onSubmit={(val) => { addNote(val) }}
+                            >
+
+                                {({ handleChange, values }) => (
+
+                                    <Form>
+                                        {/* Form elements here */}
+                                        <div className="mb-6">
+                                            <label
+                                                htmlFor="subject"
+                                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                            >
+                                                Amount
+                                            </label>
+                                            <Field
+                                                for="amount"
+                                                name="amount"
+                                                type="number"
+                                                id="subject"
+                                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                placeholder=""
+                                                value={selectedNote.amount}
+                                                required
+                                            />
+                                        </div>
+                                        <div className="mb-6">
+                                            <label
+                                                htmlFor="message"
+                                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                            >
+                                                Description
+                                            </label>
+                                            <Field
+                                                for="description"
+                                                name="description"
+                                                id="message"
+                                                rows="4"
+                                                as="textarea"
+                                                className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                placeholder="Your message..."
+                                                value={selectedNote.description}
+                                            />
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label
+                                                htmlFor="message"
+                                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                            >
+                                                Payment Mode
+                                            </label>
+
+                                            {/* Offline Radio Button */}
+                                            <div className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700">
+                                                <input
+                                                    for="payment_mode"
+
+                                                    id="online-payment"
+                                                    type="radio"
+                                                    name="payment_mode"
+                                                    value="offline"
+                                                    onChange={handleChange} // Track changes
+                                                    checked={values.payment_mode === 'offline'} // Check if selected
+                                                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                                />
+                                                <label
+                                                    htmlFor="online-payment"
+                                                    className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                                >
+                                                    Offline
+                                                </label>
+                                            </div>
+
+                                            {/* Online Radio Button */}
+                                            <div className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700">
+                                                <input
+                                                    for="payment_mode"
+                                                    id="offline-payment"
+                                                    type="radio"
+                                                    name="payment_mode"
+                                                    value="online"
+                                                    onChange={handleChange} // Track changes
+                                                    checked={values.payment_mode === 'online'} // Check if selected
+                                                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                                />
+                                                <label
+                                                    htmlFor="offline-payment"
+                                                    className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                                >
+                                                    Online
+                                                </label>
+                                            </div>
+
+                                        </div>
+
+                                        {/* DATE */}
+                                        <div className="relative max-w-sm">
+                                            <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+                                                <svg
+                                                    className="w-4 h-4 text-gray-500 dark:text-gray-400"
+                                                    aria-hidden="true"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    fill="currentColor"
+                                                    viewBox="0 0 20 20"
+                                                >
+                                                    <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                                                </svg>
+                                            </div>
+                                            <Field
+                                                for="date"
+                                                name="date"
+                                                type="date" // Use 'date' input type for native date picker
+                                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                placeholder="Select date"
+                                                value={date}
+
+                                                onChange={handleDateChange}
+                                            />
+                                        </div>
+
+
+                                        <button
+                                            type="submit"
+                                            className=" mt-6 text-white bg-blue-700 hover:bg-blue-800 w-full focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 block"
+                                        >
+                                            Save
+                                        </button>
+
+                                    </Form>
+
+                                )}
+                            </Formik>
+
+                        </div>
+                    </div>
                 </div>
 
-                 {/* Pagination Controls */}
-          <div className="flex justify-center mt-4">
-            <button
-              onClick={() => paginate(currentPage - 1)}
-              disabled={currentPage === 1}
-              className="text-sm px-2 py-2 mx-1 bg-gray-300 rounded hover:bg-gray-400"
-            >
-              Previous
-            </button>
-            {Array.from({ length: totalPages }, (_, index) => (
-              <button
-                key={index}
-                onClick={() => paginate(index + 1)}
-                className={`text-sm px-4 py-2 mx-1 ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
-              >
-                {index + 1}
-              </button>
-            ))}
-            <button
-              onClick={() => paginate(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              className="px-2 py-1 mx-1 text-sm bg-gray-300 rounded hover:bg-gray-400"
-            >
-              Next
-            </button>
-          </div>
-        
+
+
+                {/* Pagination Controls */}
+                <div className="flex justify-center mt-4">
+                    <button
+                        onClick={() => paginate(currentPage - 1)}
+                        disabled={currentPage === 1}
+                        className="text-sm px-2 py-2 mx-1 bg-gray-300 rounded hover:bg-gray-400"
+                    >
+                        Previous
+                    </button>
+                    {Array.from({ length: totalPages }, (_, index) => (
+                        <button
+                            key={index}
+                            onClick={() => paginate(index + 1)}
+                            className={`text-sm px-4 py-2 mx-1 ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
+                        >
+                            {index + 1}
+                        </button>
+                    ))}
+                    <button
+                        onClick={() => paginate(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                        className="px-2 py-1 mx-1 text-sm bg-gray-300 rounded hover:bg-gray-400"
+                    >
+                        Next
+                    </button>
+                </div>
+
 
                 <div className="relative overflow-x-auto">
                     {/* Buttons */}

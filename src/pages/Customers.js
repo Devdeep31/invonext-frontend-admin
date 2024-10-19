@@ -115,12 +115,12 @@ const Customers = () => {
 
         {/* Table */}
         <div className="relative overflow-x-auto">
-          <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 justify-between text-center">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <table class="w-full text-sm text-left text-center rtl:text-right text-gray-500 dark:text-gray-400">
+          <thead class="text-xs text-gray-700 uppercase bg-gray-300 dark:bg-gray-700 dark:text-gray-200">
               <tr>
-                <th className="px-6 py-3">NAME</th>
-                <th className="px-6 py-3">AMOUNT</th>
-                <th className="px-6 py-3">Details</th>
+                <th scope='col' className="px-6 py-3 bg-gray-300 dark:bg-gray-700">NAME</th>
+                <th scope='col' className="px-6 py-3 bg-gray-300 dark:bg-gray-700">AMOUNT</th>
+                <th scope='col' className="px-6 py-3 bg-gray-300 dark:bg-gray-700">Details</th>
               </tr>
             </thead>
             <tbody>
