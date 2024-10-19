@@ -288,6 +288,7 @@ export default function CashBook() {
                                         </td>
                                         <td>
                                             <button
+                                                type='button'
                                                 onClick={() => editNote(e.cashbook_id)}
                                                 data-modal-target="editEntries-modal"
                                                 data-modal-toggle="editEntries-modal"
@@ -302,9 +303,9 @@ export default function CashBook() {
                             ))}
                         </tbody>
                     </table>
-                    <button data-modal-target="editEntries-modal"
+                    {/* <button data-modal-target="editEntries-modal"
                         data-modal-toggle="editEntries-modal"
-                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline">modal</button>
+                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline">modal</button> */}
                     {/* Modal for edit cashbook entries */}
                     <div id="editEntries-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
 
@@ -490,337 +491,328 @@ export default function CashBook() {
                 </div>
 
 
-                <div className="relative overflow-x-auto">
+                <div className="relative overflow-x-auto flex justify-center mt-2">
                     {/* Buttons */}
-                    <div className="flex gap-4 w-[700px] justify-center mt-4">
-                        <button type="button" data-drawer-show="drawer-contact-out"
-                            aria-controls="drawer-contact-out" className="w-20 text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">Out</button>
+                    <button type="button" data-drawer-target="drawer-contact-out" data-drawer-show="drawer-contact-out" data-drawer-placement="right" aria-controls="drawer-contact-out"
+                        className=" w-20 text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-800">Out</button>
 
-                        <button type="button" data-drawer-show="drawer-contact-in"
-                            aria-controls="drawer-contact-in" className=" w-20 text-green-700 hover:text-white border border-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-green-500 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-600 dark:focus:ring-green-800">In</button>
-                    </div>
-
-                    {/* Drawer for "In" */}
-                    <div id="drawer-contact-in"
-                        className="fixed top-0 right-0 z-40 h-screen p-4 overflow-y-auto transition-transform translate-x-full bg-white w-80 dark:bg-gray-800"
-                        tabIndex="-1" aria-labelledby="drawer-contact-label-in">
-                        <h5 id="drawer-contact-label-in"
-                            className="inline-flex items-center mb-6 text-base font-semibold text-gray-500 uppercase dark:text-gray-400">
-                            Add In Entry
-                        </h5>
-                        <button type="button" data-drawer-hide="drawer-contact-in"
-                            aria-controls="drawer-contact-in" className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 absolute top-2.5 right-2.5 inline-flex items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white">
-                            <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                            </svg>
-                            <span className="sr-only">Close menu</span>
-                        </button>
-                        {/* Form for "In" Drawer */}
-                        <Formik
-                            initialValues={initialState_IN}
-                            onSubmit={(val) => { addNote(val) }}
-                        >
-
-                            {({ handleChange, values }) => (
-
-                                <Form>
-                                    {/* Form elements here */}
-                                    <div className="mb-6">
-                                        <label
-                                            htmlFor="subject"
-                                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                        >
-                                            Amount
-                                        </label>
-                                        <Field
-                                            for="amount"
-                                            name="amount"
-                                            type="number"
-                                            id="subject"
-                                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder=""
-                                            required
-                                        />
-                                    </div>
-                                    <div className="mb-6">
-                                        <label
-                                            htmlFor="message"
-                                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                        >
-                                            Description
-                                        </label>
-                                        <Field
-                                            for="description"
-                                            name="description"
-                                            id="message"
-                                            rows="4"
-                                            as="textarea"
-                                            className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder="Your message..."
-                                        />
-                                    </div>
-
-                                    <div class="mb-4">
-                                        <label
-                                            htmlFor="message"
-                                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                        >
-                                            Payment Mode
-                                        </label>
-
-                                        {/* Offline Radio Button */}
-                                        <div className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700">
-                                            <input
-                                                for="payment_mode"
-
-                                                id="online-payment"
-                                                type="radio"
-                                                name="payment_mode"
-                                                value="offline"
-                                                onChange={handleChange} // Track changes
-                                                checked={values.payment_mode === 'offline'} // Check if selected
-                                                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                            />
-                                            <label
-                                                htmlFor="online-payment"
-                                                className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                            >
-                                                Offline
-                                            </label>
-                                        </div>
-
-                                        {/* Online Radio Button */}
-                                        <div className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700">
-                                            <input
-                                                for="payment_mode"
-                                                id="offline-payment"
-                                                type="radio"
-                                                name="payment_mode"
-                                                value="online"
-                                                onChange={handleChange} // Track changes
-                                                checked={values.payment_mode === 'online'} // Check if selected
-                                                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                            />
-                                            <label
-                                                htmlFor="offline-payment"
-                                                className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                            >
-                                                Online
-                                            </label>
-                                        </div>
-
-                                    </div>
-
-                                    {/* DATE */}
-                                    <div className="relative max-w-sm">
-                                        <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
-                                            <svg
-                                                className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                                                aria-hidden="true"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="currentColor"
-                                                viewBox="0 0 20 20"
-                                            >
-                                                <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
-                                            </svg>
-                                        </div>
-                                        <Field
-                                            for="date"
-                                            name="date"
-                                            type="date" // Use 'date' input type for native date picker
-                                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder="Select date"
-                                            value={date}
-
-                                            onChange={handleDateChange}
-                                        />
-                                    </div>
-
-
-                                    <button
-                                        type="submit"
-                                        className=" mt-6 text-white bg-blue-700 hover:bg-blue-800 w-full focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 block"
-                                    >
-                                        Save
-                                    </button>
-
-                                </Form>
-
-                            )}
-                        </Formik>
-
-
-                        <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                            <a href="#" className="hover:underline">
-                                invonext@company.com
-                            </a>
-                        </p>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                            <a href="#" className="hover:underline">
-                                212-456-7890
-                            </a>
-                        </p>
-                    </div>
-
-                    {/* Drawer for "Out" */}
-                    <div id="drawer-contact-out"
-                        className="fixed top-0 right-0 z-40 h-screen p-4 overflow-y-auto transition-transform translate-x-full bg-white w-80 dark:bg-gray-800"
-                        tabIndex="-1" aria-labelledby="drawer-contact-label-out">
-                        <h5 id="drawer-contact-label-out"
-                            className="inline-flex items-center mb-6 text-base font-semibold text-gray-500 uppercase dark:text-gray-400">
-                            Add Out Entry
-                        </h5>
-                        <button type="button" data-drawer-hide="drawer-contact-out"
-                            aria-controls="drawer-contact-out" className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 absolute top-2.5 right-2.5 inline-flex items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white">
-                            <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                            </svg>
-                            <span className="sr-only">Close menu</span>
-                        </button>
-                        {/* Form for "Out" Drawer */}
-                        <Formik
-                            initialValues={initialState_OUT}
-                            onSubmit={(val) => { addNote(val, 'OUT') }}
-                        >
-                            {({ handleChange, values }) => (
-
-                                <Form>
-                                    {/* Form elements here */}
-                                    <div className="mb-6">
-                                        <label
-                                            htmlFor="subject"
-                                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                        >
-                                            Amount
-                                        </label>
-                                        <Field
-                                            for="amount"
-                                            name="amount"
-                                            type="number"
-                                            id="subject"
-                                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder=""
-                                            required
-                                        />
-                                    </div>
-                                    <div className="mb-6">
-                                        <label
-                                            htmlFor="message"
-                                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                        >
-                                            Description
-                                        </label>
-                                        <Field
-                                            for="description"
-                                            name="description"
-                                            id="message"
-                                            rows="4"
-                                            as="textarea"
-                                            className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder="Your message..."
-                                        />
-                                    </div>
-
-                                    <div class="mb-4">
-                                        <label
-                                            htmlFor="message"
-                                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                        >
-                                            Payment Mode
-                                        </label>
-
-                                        {/* Offline Radio Button */}
-                                        <div className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700">
-                                            <input
-                                                for="payment_mode"
-
-                                                id="online-payment"
-                                                type="radio"
-                                                name="payment_mode"
-                                                value="offline"
-                                                onChange={handleChange} // Track changes
-                                                checked={values.payment_mode === 'offline'} // Check if selected
-                                                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                            />
-                                            <label
-                                                htmlFor="online-payment"
-                                                className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                            >
-                                                Offline
-                                            </label>
-                                        </div>
-
-                                        {/* Online Radio Button */}
-                                        <div className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700">
-                                            <input
-                                                for="payment_mode"
-                                                id="offline-payment"
-                                                type="radio"
-                                                name="payment_mode"
-                                                value="online"
-                                                onChange={handleChange} // Track changes
-                                                checked={values.payment_mode === 'online'} // Check if selected
-                                                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                            />
-                                            <label
-                                                htmlFor="offline-payment"
-                                                className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                            >
-                                                Online
-                                            </label>
-                                        </div>
-
-                                    </div>
-
-
-                                    <div className="relative max-w-sm">
-                                        <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
-                                            <svg
-                                                className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                                                aria-hidden="true"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="currentColor"
-                                                viewBox="0 0 20 20"
-                                            >
-                                                <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
-                                            </svg>
-                                        </div>
-                                        <Field
-                                            for="date"
-                                            name="date"
-                                            type="date" // Use 'date' input type for native date picker
-                                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder="Select date"
-                                            value={date}
-                                            onChange={handleDateChange}
-                                        />
-                                    </div>
-
-                                    <button
-                                        type="submit"
-                                        className=" mt-6 text-white bg-blue-700 hover:bg-blue-800 w-full focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 block"
-                                    >
-                                        Save
-                                    </button>
-
-                                </Form>
-
-                            )}
-                        </Formik>
-
-                        <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                            <a href="#" className="hover:underline">
-                                invonext@company.com
-                            </a>
-                        </p>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                            <a href="#" className="hover:underline">
-                                212-456-7890
-                            </a>
-                        </p>
-                    </div>
+                    <button type="button" data-drawer-target="drawer-contact-in" data-drawer-show="drawer-contact-in" data-drawer-placement="right" aria-controls="drawer-contact-in"
+                        className=" w-20 text-green-700 hover:text-white border border-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-green-500 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-600 dark:focus:ring-green-800">In</button>
                 </div>
             </div>
+
+            {/* Drawer for "In" */}
+            <div id="drawer-contact-in" class="fixed top-0 right-0 z-40 h-screen p-4 overflow-y-auto transition-transform translate-x-full bg-white w-80 dark:bg-gray-800" tabindex="-1" aria-labelledby="drawer-right-label">
+                <h5 id="drawer-right-label" class="inline-flex items-center mb-4 text-base font-semibold text-gray-500 dark:text-gray-400"><svg class="w-4 h-4 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                </svg>Cashbook in entry</h5>
+                <button type="button" data-drawer-hide="drawer-contact-in" aria-controls="drawer-contact-in" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 absolute top-2.5 end-2.5 inline-flex items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white" >
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                    </svg>
+                    <span class="sr-only">Close menu</span>
+                </button>
+                {/* Form for "In" Drawer */}
+                <Formik
+                    initialValues={initialState_IN}
+                    onSubmit={(val) => { addNote(val) }}
+                >
+
+                    {({ handleChange, values }) => (
+
+                        <Form>
+                            {/* Form elements here */}
+                            <div className="mb-6">
+                                <label
+                                    htmlFor="subject"
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                >
+                                    Amount
+                                </label>
+                                <Field
+                                    for="amount"
+                                    name="amount"
+                                    type="number"
+                                    id="subject"
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder=""
+                                    required
+                                />
+                            </div>
+                            <div className="mb-6">
+                                <label
+                                    htmlFor="message"
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                >
+                                    Description
+                                </label>
+                                <Field
+                                    for="description"
+                                    name="description"
+                                    id="message"
+                                    rows="4"
+                                    as="textarea"
+                                    className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="Your message..."
+                                />
+                            </div>
+
+                            <div class="mb-4">
+                                <label
+                                    htmlFor="message"
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                >
+                                    Payment Mode
+                                </label>
+
+                                {/* Offline Radio Button */}
+                                <div className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700">
+                                    <input
+                                        for="payment_mode"
+
+                                        id="online-payment"
+                                        type="radio"
+                                        name="payment_mode"
+                                        value="offline"
+                                        onChange={handleChange} // Track changes
+                                        checked={values.payment_mode === 'offline'} // Check if selected
+                                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                    />
+                                    <label
+                                        htmlFor="online-payment"
+                                        className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                    >
+                                        Offline
+                                    </label>
+                                </div>
+
+                                {/* Online Radio Button */}
+                                <div className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700">
+                                    <input
+                                        for="payment_mode"
+                                        id="offline-payment"
+                                        type="radio"
+                                        name="payment_mode"
+                                        value="online"
+                                        onChange={handleChange} // Track changes
+                                        checked={values.payment_mode === 'online'} // Check if selected
+                                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                    />
+                                    <label
+                                        htmlFor="offline-payment"
+                                        className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                    >
+                                        Online
+                                    </label>
+                                </div>
+
+                            </div>
+
+                            {/* DATE */}
+                            <div className="relative max-w-sm">
+                                <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+                                    <svg
+                                        className="w-4 h-4 text-gray-500 dark:text-gray-400"
+                                        aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                                    </svg>
+                                </div>
+                                <Field
+                                    for="date"
+                                    name="date"
+                                    type="date" // Use 'date' input type for native date picker
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="Select date"
+                                    value={date}
+
+                                    onChange={handleDateChange}
+                                />
+                            </div>
+
+
+                            <button
+                                type="submit"
+                                className=" mt-6 text-white bg-blue-700 hover:bg-blue-800 w-full focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 block"
+                            >
+                                Save
+                            </button>
+
+                        </Form>
+
+                    )}
+                </Formik>
+
+
+                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                    <a href="#" className="hover:underline">
+                        invonext@company.com
+                    </a>
+                </p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                    <a href="#" className="hover:underline">
+                        212-456-7890
+                    </a>
+                </p>
+            </div>
+
+            {/* Drawer for "Out" */}
+            <div id="drawer-contact-out" class="fixed top-0 right-0 z-40 h-screen p-4 overflow-y-auto transition-transform translate-x-full bg-white w-80 dark:bg-gray-800" tabindex="-1" aria-labelledby="drawer-right-label">
+                <h5 id="drawer-right-label" class="inline-flex items-center mb-4 text-base font-semibold text-gray-500 dark:text-gray-400"><svg class="w-4 h-4 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                </svg>Cashbook out entry</h5>
+                <button type="button" data-drawer-hide="drawer-contact-out" aria-controls="drawer-contact-out" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 absolute top-2.5 end-2.5 inline-flex items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white" >
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                    </svg>
+                    <span class="sr-only">Close menu</span>
+                </button>
+                {/* Form for "Out" Drawer */}
+                <Formik
+                    initialValues={initialState_OUT}
+                    onSubmit={(val) => { addNote(val, 'OUT') }}
+                >
+                    {({ handleChange, values }) => (
+
+                        <Form>
+                            {/* Form elements here */}
+                            <div className="mb-6">
+                                <label
+                                    htmlFor="subject"
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                >
+                                    Amount
+                                </label>
+                                <Field
+                                    for="amount"
+                                    name="amount"
+                                    type="number"
+                                    id="subject"
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder=""
+                                    required
+                                />
+                            </div>
+                            <div className="mb-6">
+                                <label
+                                    htmlFor="message"
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                >
+                                    Description
+                                </label>
+                                <Field
+                                    for="description"
+                                    name="description"
+                                    id="message"
+                                    rows="4"
+                                    as="textarea"
+                                    className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="Your message..."
+                                />
+                            </div>
+
+                            <div class="mb-4">
+                                <label
+                                    htmlFor="message"
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                >
+                                    Payment Mode
+                                </label>
+
+                                {/* Offline Radio Button */}
+                                <div className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700">
+                                    <input
+                                        for="payment_mode"
+
+                                        id="online-payment"
+                                        type="radio"
+                                        name="payment_mode"
+                                        value="offline"
+                                        onChange={handleChange} // Track changes
+                                        checked={values.payment_mode === 'offline'} // Check if selected
+                                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                    />
+                                    <label
+                                        htmlFor="online-payment"
+                                        className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                    >
+                                        Offline
+                                    </label>
+                                </div>
+
+                                {/* Online Radio Button */}
+                                <div className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700">
+                                    <input
+                                        for="payment_mode"
+                                        id="offline-payment"
+                                        type="radio"
+                                        name="payment_mode"
+                                        value="online"
+                                        onChange={handleChange} // Track changes
+                                        checked={values.payment_mode === 'online'} // Check if selected
+                                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                    />
+                                    <label
+                                        htmlFor="offline-payment"
+                                        className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                    >
+                                        Online
+                                    </label>
+                                </div>
+
+                            </div>
+
+
+                            <div className="relative max-w-sm">
+                                <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+                                    <svg
+                                        className="w-4 h-4 text-gray-500 dark:text-gray-400"
+                                        aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                                    </svg>
+                                </div>
+                                <Field
+                                    for="date"
+                                    name="date"
+                                    type="date" // Use 'date' input type for native date picker
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="Select date"
+                                    value={date}
+                                    onChange={handleDateChange}
+                                />
+                            </div>
+
+                            <button
+                                type="submit"
+                                className=" mt-6 text-white bg-blue-700 hover:bg-blue-800 w-full focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 block"
+                            >
+                                Save
+                            </button>
+
+                        </Form>
+
+                    )}
+                </Formik>
+
+                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                    <a href="#" className="hover:underline">
+                        invonext@company.com
+                    </a>
+                </p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                    <a href="#" className="hover:underline">
+                        212-456-7890
+                    </a>
+                </p>
+            </div>
+        
 
 
         </>
