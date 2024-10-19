@@ -5,7 +5,7 @@ import Weeksales from "../charts/WeekSales";
 const Dashboard = () => {
     return (
         <>
-            <div className="flex gap-4">
+            <div className="flex justify-around">
                 <Charts />
                 <Weeksales />
                 <Invoiceprogress/>

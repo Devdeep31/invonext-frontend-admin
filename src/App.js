@@ -13,6 +13,7 @@ import Inventory from './pages/Inventory';
 import Staff from './pages/Staff';
 import Application from './components/Application';
 import Dashboard from './pages/Dashboard';
+import Expense from './pages/Expense';
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
         <Route element={<Application />}>
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/cashbook' element={<CashBook />} />
+          <Route path='/expenses' element={<Expense />} />
           <Route path='/customers' element={<Customers />} />
           <Route path='/invoice' element={<Invoice />} />
           <Route path='/inventory' element={<Inventory />} />

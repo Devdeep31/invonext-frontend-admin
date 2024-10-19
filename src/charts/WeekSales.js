@@ -68,7 +68,7 @@ const Weeksales = () => {
         {
             name: "Sales",
             data: [150, 141, 145, 152, 135, 125],  // Sales data for Developer Edition
-            color: "#1A56DB",  // Blue color for this series
+            color: "#32cd32",  // Blue color for this series
         },
         {
             name: "Expense",

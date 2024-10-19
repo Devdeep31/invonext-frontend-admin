@@ -40,7 +40,7 @@ const Sidebar = () => {
           </Link>
         </li>
         <li className="p-2">
-          <Link to="" className="hover:bg-gray-700 block p-2 rounded text-m flex items-center">
+          <Link to="/expenses" className="hover:bg-gray-700 block p-2 rounded text-m flex items-center">
             <i className="bx bxs-objects-vertical-bottom"></i>
             {!isCollapsed && <span className="ml-2">Expense</span>}
           </Link>

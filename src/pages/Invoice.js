@@ -58,7 +58,7 @@ const Invoice = () => {
             {/* Tab content */}
             <div className="p-4">
                 {activeTab === 'sales' && <div>
-                    <h1 className='text-xl font-bold text-gray-500'>Create Sales Invoice</h1>
+                    <h1 className='text-xl font-bold text-gray-500'>Sales Invoice</h1>
 
                     <div class="pb-4 mt-10">
                         <label for="table-search" class="sr-only">Search</label>
@@ -139,7 +139,7 @@ const Invoice = () => {
                         <div class="p-2 bg-white rounded-lg shadow-lg w-full max-w-6xl">
                             {/* <!-- Modal Header --> */}
                             <div class="flex justify-between items-center p-4 border-b">
-                                <h3 class="text-xl font-semibold text-gray-900">Create Invoice</h3>
+                                <h3 class="text-xl font-semibold text-gray-900">Create sales invoice</h3>
                                 <button type="button" class="text-gray-400 hover:text-gray-600" onclick="closeModal()">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -260,13 +260,16 @@ const Invoice = () => {
                     </div>
 
 
+                    {/* Sales Invoice End */}
+
+
                     {/* Drawer for select item from inventory */}
 
                     {/* <!-- drawer init and toggle --> */}
 
                 </div>}
                 {activeTab === 'purchase' && <div>
-                    <h1 className='text-xl font-bold text-gray-500'>Create Purchase Invoice</h1>
+                    <h1 className='text-xl font-bold text-gray-500'>Purchase Invoice</h1>
 
                     <div class="pb-4 mt-10">
                         <label for="table-search" class="sr-only">Search</label>
@@ -327,9 +330,14 @@ const Invoice = () => {
                         </table>
                     </div>
 
-                    <div className='flex justify-end mt-4 w-[700px]'>
-                        <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">+ Purchase</button>
-                    </div>
+
+
+
+
+                    
+
+
+
                 </div>}
             </div>
 

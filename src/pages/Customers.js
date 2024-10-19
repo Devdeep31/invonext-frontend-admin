@@ -1,7 +1,7 @@
 import { Formik, Form, Field } from 'formik';
 import { useEffect, useState } from 'react';
 import { myAxios } from '../services/Helper';
-import useFetch from '../components/Axios/useFetch';
+import useFetch from '../Hooks/useFetch';
 
 const Customers = () => {
   const [customers, setCustomers] = useState([]);
@@ -9,32 +9,36 @@ const Customers = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCustomer,setSelectedCustomer] = useState(null);
 
-  const initialState = {
+ const initialState = {
+    id: "",
     name: "",
     email: "",
     phonenumber: "",
     address: "",
     balance: "",
-    message: "",
-  };
+    message: ""
+  }
 
   const saveCustomer = async (val) => {
     try {
-      const token = localStorage.getItem("token");
-      await myAxios.post("/admin/addCustomer", val, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      //const token = localStorage.getItem("token");
+      // await myAxios.post("/customer/add", val, {
+      //   headers: { Authorization: `Bearer ${token}` },
+      // });
+      await myAxios.post('/customer/add',val);
       alert("Customer saved");
       window.location.reload();
     } catch (error) {
       alert("Something went wrong " + error);
     }
   };
-  const url = '/admin/getCustomer/'+selectedCustomer;
-  const [data, error, loading] = useFetch(url);
-  console.log(data);
+
+  // const url = '/customer/customer/'+selectedCustomer;
+  
+  // const [data, error, loading] = useFetch(url);
+  // console.log(data);
   const editCustomer = (val) => {
-    console.log('edit clicked');
+    //console.log('edit clicked');
     setSelectedCustomer(1);
     //return(<><h1>ok{val}</h1></>)
   }
@@ -42,10 +46,11 @@ const Customers = () => {
   useEffect(() => {
     (async () => {
       try {
-        const token = localStorage.getItem("token");
-        const response = await myAxios.get("/admin/getAllCustomers", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        //const token = localStorage.getItem("token");
+        // const response = await myAxios.get("/customers", {
+        //   headers: { Authorization: `Bearer ${token}` },
+        // });
+        const response = await myAxios.get('customer/customers');
         setCustomers(response.data);
         setFilteredCustomers(response.data);
       } catch (error) {
@@ -119,22 +124,22 @@ const Customers = () => {
               </tr>
             </thead>
             <tbody>
-              {currentCustomers.map((customer) => {
-                const {id, name, balance } = customer;
-                return (
+              {filteredCustomers.map((customer) => (
+                <>
+                
                   <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={customer.id}>
                     <th className="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                      {name}
+                      {customer.name}
                     </th>
-                    <td className="px-6 py-4 text-green-400">₹{balance}</td>
+                    <td className="px-6 py-4 text-green-400">₹{customer.balance}</td>
                     <td>
                       <button onClick={() => {
-                        editCustomer(id);
+                        editCustomer(customer.id);
                       }} className="text-blue-500 dark:text-blue-200 h-6 rounded p-1">View</button>
                     </td>
                   </tr>
-                );
-              })}
+                  </>
+              ))}
             </tbody>
           </table>
 
@@ -305,6 +310,7 @@ const Customers = () => {
                   id="message"
                   as="textarea"
                   name="message"
+                  for="message"
                   rows="4"
                   className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="Your message..."
