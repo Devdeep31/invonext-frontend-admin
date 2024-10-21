@@ -9,6 +9,7 @@ import { initFlowbite } from 'flowbite'
 
 
 export default function CashBook() {
+    const [currentPage, setCurrentPage] = useState(1);
 
     const { isOpen, toggleDropdown, dropdownRef } = Dropdown();
     const { date, error, handleDateChange } = DatePicker();
@@ -53,7 +54,7 @@ export default function CashBook() {
         //     closeButtonOut.removeEventListener('click', hideDrawerOut);
         // };
 
-    }, []);
+    }, [currentPage]);
 
 
     //const [customers, setCustomers] = useState([]);
@@ -63,7 +64,7 @@ export default function CashBook() {
     const [data, loading] = useFetch('/cashbook/cashbooks');
 
     //Pagination . .
-    const [currentPage, setCurrentPage] = useState(1);
+   
     const entryPage = 8;
     const indexOfLastEntry = currentPage * entryPage;
     const indexOfFirstEntry = indexOfLastEntry - entryPage;
@@ -288,7 +289,7 @@ export default function CashBook() {
                                         </td>
                                         <td>
                                             <button
-                                                type='button'
+                                                
                                                 onClick={() => editNote(e.cashbook_id)}
                                                 data-modal-target="editEntries-modal"
                                                 data-modal-toggle="editEntries-modal"
@@ -302,10 +303,14 @@ export default function CashBook() {
                                 </>
                             ))}
                         </tbody>
+
+
+                       
+
                     </table>
-                    {/* <button data-modal-target="editEntries-modal"
+                    <button data-modal-target="editEntries-modal"
                         data-modal-toggle="editEntries-modal"
-                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline">modal</button> */}
+                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline">modal</button>
                     {/* Modal for edit cashbook entries */}
                     <div id="editEntries-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
 
@@ -323,7 +328,7 @@ export default function CashBook() {
                             </div>
                             {/* <!-- Modal content --> */}
                             <Formik
-                                initialValues={initialState_IN}
+                                initialValues={selectedNote}
                                 onSubmit={(val) => { addNote(val) }}
                             >
 
@@ -345,7 +350,7 @@ export default function CashBook() {
                                                 id="subject"
                                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                 placeholder=""
-                                                value={selectedNote.amount}
+                                                
                                                 required
                                             />
                                         </div>
@@ -364,7 +369,7 @@ export default function CashBook() {
                                                 as="textarea"
                                                 className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                 placeholder="Your message..."
-                                                value={selectedNote.description}
+                                                
                                             />
                                         </div>
 
@@ -812,7 +817,7 @@ export default function CashBook() {
                     </a>
                 </p>
             </div>
-        
+
 
 
         </>
