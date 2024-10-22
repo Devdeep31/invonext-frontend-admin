@@ -1,0 +1,91 @@
+// Get buttons and drawers
+        // const drawerButtonIn = document.querySelector("[data-drawer-show='drawer-contact-in']");
+        // const drawerButtonOut = document.querySelector("[data-drawer-show='drawer-contact-out']");
+        // const drawerIn = document.getElementById('drawer-contact-in');
+        // const drawerOut = document.getElementById('drawer-contact-out');
+        // const closeButtonIn = document.querySelector("[data-drawer-hide='drawer-contact-in']");
+        // const closeButtonOut = document.querySelector("[data-drawer-hide='drawer-contact-out']");
+
+        // // Functions to show/hide the drawers
+        // const showDrawerIn = () => {
+        //     drawerIn.style.transform = 'translateX(0)';
+        // };
+        // const hideDrawerIn = () => {
+        //     drawerIn.style.transform = 'translateX(100%)';
+        // };
+
+        // const showDrawerOut = () => {
+        //     drawerOut.style.transform = 'translateX(0)';
+        // };
+        // const hideDrawerOut = () => {
+        //     drawerOut.style.transform = 'translateX(100%)';
+        // };
+
+        // // Add event listeners to buttons
+        // drawerButtonIn.addEventListener('click', showDrawerIn);
+        // drawerButtonOut.addEventListener('click', showDrawerOut);
+        // closeButtonIn.addEventListener('click', hideDrawerIn);
+        // closeButtonOut.addEventListener('click', hideDrawerOut);
+
+        // // Cleanup function to remove listeners when component unmounts
+        // return () => {
+        //     drawerButtonIn.removeEventListener('click', showDrawerIn);
+        //     drawerButtonOut.removeEventListener('click', showDrawerOut);
+        //     closeButtonIn.removeEventListener('click', hideDrawerIn);
+        //     closeButtonOut.removeEventListener('click', hideDrawerOut);
+        // };
+
+
+
+
+
+        
+        // Drawer event handler for "category" tab
+        // if (activeTab === 'category') {
+        //     const drawerButtonIn = document.querySelector("[data-drawer-show='drawer-add-category']");
+        //     const drawerIn = document.getElementById('drawer-add-category');
+        //     const closeButtonIn = document.querySelector("[data-drawer-hide='drawer-add-category']");
+
+        //     if (drawerButtonIn && drawerIn && closeButtonIn) {
+        //         const showDrawerIn = () => {
+        //             drawerIn.style.transform = 'translateX(0)';
+        //         };
+        //         const hideDrawerIn = () => {
+        //             drawerIn.style.transform = 'translateX(100%)';
+        //         };
+
+        //         drawerButtonIn.addEventListener('click', showDrawerIn);
+        //         closeButtonIn.addEventListener('click', hideDrawerIn);
+
+        //         // Cleanup function
+        //         return () => {
+        //             drawerButtonIn.removeEventListener('click', showDrawerIn);
+        //             closeButtonIn.removeEventListener('click', hideDrawerIn);
+        //         };
+        //     }
+        // }
+
+        // Drawer event handler for "product" tab
+        // if (activeTab === 'product') {
+        //     const drawerButtonOut = document.querySelector("[data-drawer-show='drawer-add-product']");
+        //     const drawerOut = document.getElementById('drawer-add-product');
+        //     const closeButtonOut = document.querySelector("[data-drawer-hide='drawer-add-product']");
+
+        //     if (drawerButtonOut && drawerOut && closeButtonOut) {
+        //         const showDrawerOut = () => {
+        //             drawerOut.style.transform = 'translateX(0)';
+        //         };
+        //         const hideDrawerOut = () => {
+        //             drawerOut.style.transform = 'translateX(100%)';
+        //         };
+
+        //         drawerButtonOut.addEventListener('click', showDrawerOut);
+        //         closeButtonOut.addEventListener('click', hideDrawerOut);
+
+        //         // Cleanup function
+        //         return () => {
+        //             drawerButtonOut.removeEventListener('click', showDrawerOut);
+        //             closeButtonOut.removeEventListener('click', hideDrawerOut);
+        //         };
+        //     }
+        // }

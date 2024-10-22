@@ -14,6 +14,8 @@ import Staff from './pages/Staff';
 import Application from './components/Application';
 import Dashboard from './pages/Dashboard';
 import Expense from './pages/Expense';
+import TestPagination from './pages/Test';
+import GenerateReport from './services/GenerateRepot';
 
 function App() {
 
@@ -23,7 +25,7 @@ function App() {
         {/* seprate routes here */}
         <Route path='/' element={<Login />} />
         <Route path='/login' element={<Login />} />
-        <Route path='/form' element={<Test />} />
+        <Route path='/form' element={<GenerateReport />} />
         <Route element={<Application />}>
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/cashbook' element={<CashBook />} />

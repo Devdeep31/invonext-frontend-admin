@@ -10,49 +10,14 @@ import { initFlowbite } from 'flowbite'
 
 export default function CashBook() {
     const [currentPage, setCurrentPage] = useState(1);
-
+    const [selectedNote, setSelectedNote] = useState({});
     const { isOpen, toggleDropdown, dropdownRef } = Dropdown();
     const { date, error, handleDateChange } = DatePicker();
 
     useEffect(() => {
 
         initFlowbite();
-        // Get buttons and drawers
-        // const drawerButtonIn = document.querySelector("[data-drawer-show='drawer-contact-in']");
-        // const drawerButtonOut = document.querySelector("[data-drawer-show='drawer-contact-out']");
-        // const drawerIn = document.getElementById('drawer-contact-in');
-        // const drawerOut = document.getElementById('drawer-contact-out');
-        // const closeButtonIn = document.querySelector("[data-drawer-hide='drawer-contact-in']");
-        // const closeButtonOut = document.querySelector("[data-drawer-hide='drawer-contact-out']");
 
-        // // Functions to show/hide the drawers
-        // const showDrawerIn = () => {
-        //     drawerIn.style.transform = 'translateX(0)';
-        // };
-        // const hideDrawerIn = () => {
-        //     drawerIn.style.transform = 'translateX(100%)';
-        // };
-
-        // const showDrawerOut = () => {
-        //     drawerOut.style.transform = 'translateX(0)';
-        // };
-        // const hideDrawerOut = () => {
-        //     drawerOut.style.transform = 'translateX(100%)';
-        // };
-
-        // // Add event listeners to buttons
-        // drawerButtonIn.addEventListener('click', showDrawerIn);
-        // drawerButtonOut.addEventListener('click', showDrawerOut);
-        // closeButtonIn.addEventListener('click', hideDrawerIn);
-        // closeButtonOut.addEventListener('click', hideDrawerOut);
-
-        // // Cleanup function to remove listeners when component unmounts
-        // return () => {
-        //     drawerButtonIn.removeEventListener('click', showDrawerIn);
-        //     drawerButtonOut.removeEventListener('click', showDrawerOut);
-        //     closeButtonIn.removeEventListener('click', hideDrawerIn);
-        //     closeButtonOut.removeEventListener('click', hideDrawerOut);
-        // };
 
     }, [currentPage]);
 
@@ -64,7 +29,7 @@ export default function CashBook() {
     const [data, loading] = useFetch('/cashbook/cashbooks');
 
     //Pagination . .
-   
+
     const entryPage = 8;
     const indexOfLastEntry = currentPage * entryPage;
     const indexOfFirstEntry = indexOfLastEntry - entryPage;
@@ -121,15 +86,25 @@ export default function CashBook() {
         }
     }
 
-    const [selectedNote, setSelectedNote] = useState({});
+
 
     async function editNote(val) {
         try {
             const response = await myAxios.get('/cashbook/' + val);
             setSelectedNote(response.data);
             // console.log(selectedNote.amount);
+            //alert('edit note run'+selectedNote.amount);
         } catch (error) {
             alert(error);
+        }
+    }
+
+    async function updateEntry(val) {
+        try {
+            const response = await myAxios.put('/cashbook/update', val);
+            alert('updated ' + response.status)
+        } catch (error) {
+            alert("something went wrong : " + error);
         }
     }
 
@@ -207,107 +182,69 @@ export default function CashBook() {
                 </div>
 
 
-
-
-
-
-
-                {/* <div id="dropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
-                        <li>
-                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Online</a>
-                        </li>
-                        <li>
-                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Offline</a>
-                        </li>
-
-                    </ul>
-                </div> */}
-
                 {/* Table */}
-
-
-
-
-
-
 
                 <div class="relative overflow-x-auto custom-scrollbar">
                     <table class="w-full text-sm text-center text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-
+                        <thead class="">
                             <tr>
-                                <th scope="col" class="px-6 py-3">
+                                <th scope="col" class="px-6 py-3 font-bold bg-gray-300">
                                     Description
                                 </th>
-                                <th scope="col" class="px-6 py-3">
+                                <th scope="col" class="px-6 py-3 font-bold bg-gray-300">
                                     Amount
                                 </th>
-                                <th scope="col" class="px-6 py-3">
+                                <th scope="col" class="px-6 py-3 font-bold bg-gray-300">
                                     Out
                                 </th>
-                                <th scope="col" class="px-6 py-3">
+                                <th scope="col" class="px-6 py-3 font-bold bg-gray-300">
                                     In
                                 </th>
-                                <th scope="col" class="px-6 py-3">
+                                <th scope="col" class="px-6 py-3 font-bold bg-gray-300">
                                     Date
                                 </th>
-                                <th>
+                                <th scope="col" class="px-6 py-3 font-bold bg-gray-300">
                                     Action
                                 </th>
-
                             </tr>
                         </thead>
                         <tbody>
                             {currentEntries.map((e) => (
-                                <>
-                                    {/* {console.log(e.amount)} */}
-
-
-                                    <tr key={e.cashbook_id} class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            {/* name */}
-                                            {e.description}
-                                        </th>
-                                        <th className='px-6 py-4'>
-                                            {e.amount}
-                                        </th>
-                                        <td class="px-6 py-4 text-red-500 font-bold">
-                                            {/* Out */}
-                                            {e.entry_mode === 'OUT'
-                                                ? e.entry_mode : '-'}
-
-                                        </td>
-                                        <td class="px-6 py-4 text-green-500 font-bold">
-                                            {/* In */}
-                                            {e.entry_mode === 'IN'
-                                                ? e.entry_mode : '-'}
-
-                                        </td>
-                                        <td className='px-6 py-4 text-gray-900 font-medium'>
-                                            {e.date}
-                                        </td>
-                                        <td>
-                                            <button
-                                                
-                                                onClick={() => editNote(e.cashbook_id)}
-                                                data-modal-target="editEntries-modal"
-                                                data-modal-toggle="editEntries-modal"
-                                                className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                                            >
-                                                Edit
-                                            </button>
-                                        </td>
-
-                                    </tr>
-                                </>
+                                <tr key={e.cashbook_id} class="bg-white border-b hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700">
+                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        {e.description}
+                                    </th>
+                                    <td className="px-6 py-4">
+                                        {e.amount}
+                                    </td>
+                                    <td className="px-6 py-4 text-red-500 font-bold">
+                                        {e.entry_mode === 'OUT' ? e.entry_mode : '-'}
+                                    </td>
+                                    <td className="px-6 py-4 text-green-500 font-bold">
+                                        {e.entry_mode === 'IN' ? e.entry_mode : '-'}
+                                    </td>
+                                    <td className="px-6 py-4 text-gray-900 font-medium">
+                                        {e.date}
+                                    </td>
+                                    <td>
+                                        <button
+                                            onClick={() => editNote(e.cashbook_id)}
+                                            data-modal-target="editEntries-modal"
+                                            data-modal-toggle="editEntries-modal"
+                                            className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                                        >
+                                            Edit
+                                        </button>
+                                    </td>
+                                </tr>
                             ))}
                         </tbody>
-
-
-                       
-
                     </table>
+
+
+
+
+                    {/* Modal for edit entries */}
                     <button data-modal-target="editEntries-modal"
                         data-modal-toggle="editEntries-modal"
                         className="font-medium text-blue-600 dark:text-blue-500 hover:underline">modal</button>
@@ -329,7 +266,8 @@ export default function CashBook() {
                             {/* <!-- Modal content --> */}
                             <Formik
                                 initialValues={selectedNote}
-                                onSubmit={(val) => { addNote(val) }}
+                                enableReinitialize={true}
+                                onSubmit={(val) => { updateEntry(val) }}
                             >
 
                                 {({ handleChange, values }) => (
@@ -344,38 +282,38 @@ export default function CashBook() {
                                                 Amount
                                             </label>
                                             <Field
-                                                for="amount"
+
                                                 name="amount"
                                                 type="number"
-                                                id="subject"
+                                                id="amount"
                                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                 placeholder=""
-                                                
+                                                //value={selectedNote.amount}
                                                 required
                                             />
                                         </div>
                                         <div className="mb-6">
                                             <label
-                                                htmlFor="message"
+
                                                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                                             >
                                                 Description
                                             </label>
                                             <Field
-                                                for="description"
+
                                                 name="description"
                                                 id="message"
                                                 rows="4"
                                                 as="textarea"
                                                 className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                 placeholder="Your message..."
-                                                
+
                                             />
                                         </div>
 
                                         <div class="mb-4">
                                             <label
-                                                htmlFor="message"
+                                                //htmlFor="message"
                                                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                                             >
                                                 Payment Mode
@@ -384,7 +322,7 @@ export default function CashBook() {
                                             {/* Offline Radio Button */}
                                             <div className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700">
                                                 <input
-                                                    for="payment_mode"
+
 
                                                     id="online-payment"
                                                     type="radio"
@@ -395,7 +333,7 @@ export default function CashBook() {
                                                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                                                 />
                                                 <label
-                                                    htmlFor="online-payment"
+
                                                     className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                                                 >
                                                     Offline
@@ -405,7 +343,7 @@ export default function CashBook() {
                                             {/* Online Radio Button */}
                                             <div className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700">
                                                 <input
-                                                    for="payment_mode"
+
                                                     id="offline-payment"
                                                     type="radio"
                                                     name="payment_mode"
@@ -415,7 +353,7 @@ export default function CashBook() {
                                                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                                                 />
                                                 <label
-                                                    htmlFor="offline-payment"
+
                                                     className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                                                 >
                                                     Online
