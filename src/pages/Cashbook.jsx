@@ -14,19 +14,21 @@ export default function CashBook() {
     const { isOpen, toggleDropdown, dropdownRef } = Dropdown();
     const { date, error, handleDateChange } = DatePicker();
 
+    const [data, loading] = useFetch('/cashbook/cashbooks');
+
     useEffect(() => {
 
         initFlowbite();
 
 
-    }, [currentPage]);
+    }, [currentPage,data]);
 
 
     //const [customers, setCustomers] = useState([]);
     const [filteredEntries, setfilteredEntries] = useState([]); //need to add get data
     // const [searchQuery, setSearchQuery] = useState("");
     //const [selectedCustomer,setSelectedCustomer] = useState(null);
-    const [data, loading] = useFetch('/cashbook/cashbooks');
+    
 
     //Pagination . .
 
@@ -240,14 +242,10 @@ export default function CashBook() {
                             ))}
                         </tbody>
                     </table>
-
-
-
-
                     {/* Modal for edit entries */}
-                    <button data-modal-target="editEntries-modal"
+                    {/* <button data-modal-target="editEntries-modal"
                         data-modal-toggle="editEntries-modal"
-                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline">modal</button>
+                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline">modal</button> */}
                     {/* Modal for edit cashbook entries */}
                     <div id="editEntries-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
 

@@ -90,7 +90,7 @@ const Customers = () => {
     //   drawerButton.removeEventListener('click', showDrawer);
     //   closeButton.removeEventListener('click', hideDrawer);
     // };
-  }, [currentPage]);
+  }, [currentPage,customers]);
 
   //Search bar . . 
   const handleSearch = (e) => {
@@ -157,10 +157,10 @@ const Customers = () => {
               </tr>
             </thead>
             <tbody>
-              {currentCustomers.map((customer) => (
+              {currentCustomers.map((customer,index) => (
                 <>
 
-                  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={customer.id}>
+                  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={index}>
                     <th className="px-6 py-4 font-medium text-gray-900 dark:text-white">
                       {customer.name}
                     </th>

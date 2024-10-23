@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Dropdown from '../components/scripts/Dropdown';
 import { initFlowbite } from 'flowbite'
 import useFetch from '../Hooks/useFetch';
@@ -82,16 +82,16 @@ const Inventory = () => {
 
 
 
-    // const [currentProductPage, setCurrentProductPage] = useState(1);
-    // const productsPerPage = 10; // products per page
+    const [currentProductPage, setCurrentProductPage] = useState(1);
+    const productsPerPage = 10; // products per page
 
-    // // Calculate Pagination for Products
-    // const indexOfLastProduct = currentProductPage * productsPerPage;
-    // const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-    // const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
-    // const totalProductPages = Math.ceil(products.length / productsPerPage);
+    // Calculate Pagination for Products
+    const indexOfLastProduct = currentProductPage * productsPerPage;
+    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+    const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
+    const totalProductPages = Math.ceil(products.length / productsPerPage);
 
-    // const paginateProducts = (pageNumber) => setCurrentProductPage(pageNumber);
+    const paginateProducts = (pageNumber) => setCurrentProductPage(pageNumber);
 
     //Validations
     const validationSchema = Yup.object({
@@ -168,42 +168,16 @@ const Inventory = () => {
     }
 
 
-    // useEffect(() => {
-    //     initFlowbite();
-    //     if (categories_data) {
-    //         setCategories(categories_data);
-    //     }
-    //     if (products_data) {
-    //         setProducts(products_data);
-    //     }
-
-    // }, [categories_data, products_data,products,currentProducts]); // Re-run the effect when activeTab changes
-
-    // Pagination state
-    const [currentProductPage, setCurrentProductPage] = useState(1);
-    const productsPerPage = 10; // Set number of products per page
-
-    // Memoized paginated products
-    const currentProducts = useMemo(() => {
-        const indexOfLastProduct = currentProductPage * productsPerPage;
-        const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-        return products.slice(indexOfFirstProduct, indexOfLastProduct);
-    }, [products, currentProductPage, productsPerPage]);
-
-    // Calculate total number of pages
-    const totalProductPages = Math.ceil(products.length / productsPerPage);
-
-    // Change page function
-    const paginateProducts = (pageNumber) => {
-        if (pageNumber >= 1 && pageNumber <= totalProductPages) {
-            setCurrentProductPage(pageNumber);
-        }
-    };
-
-
     useEffect(() => {
         initFlowbite();
-    });
+        if (categories_data) {
+            setCategories(categories_data);
+        }
+        if (products_data) {
+            setProducts(products_data);
+        }
+
+    }, [categories_data, products_data,products,categories]); // Re-run the effect when activeTab changes
 
 
 
@@ -486,7 +460,7 @@ const Inventory = () => {
                         {/* Table */}
                         {/* Products Table */}
                         <div className="max-h-[600px] overflow-y-auto custom-scrollbar">
-                            <table className="min-w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 table-auto border-collapse">
+                            <table className="w-[700px] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 justify-between text-center table-auto border-collapse">
                                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr className="sticky top-0 bg-gray-50 dark:bg-gray-700">
                                         <th scope="col" className="px-6 py-3">Name</th>
@@ -504,23 +478,21 @@ const Inventory = () => {
                                             </th>
                                             <td className="px-6 py-4">{product.category}</td>
                                             <td className="px-6 py-4">{product.quantity}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px]">
-                                                {product.description}
-                                            </td>
-                                            <td className="px-6 py-4">
+                                            <td className="px-6 py-4 whitespace-nowrap overflow-hidden text-ellipsis  max-w-xs">{product.description}</td>
+                                            <td>
                                                 <button
-                                                    onClick={() => editProduct(product.productid)}
-                                                    className="text-gray-800 dark:text-white h-6 rounded p-1 bg-blue-600 hover:bg-blue-700 text-white"
-                                                    aria-label={`Edit ${product.name}`}
-                                                >
-                                                    Edit
-                                                </button>
+                                                    data-modal-target="editProduct-modal"
+                                                    data-modal-toggle="editProduct-modal"
+                                                    onClick={() => {
+                                                        editProduct(product.productid)
+                                                    }}
+
+                                                    className="text-gray-800 dark:text-white h-6 rounded p-1">Edit</button>
                                             </td>
                                         </tr>
                                     ))}
                                 </tbody>
                             </table>
-
                         </div>
 
                         {/* Modal for udpate Product */}
@@ -678,39 +650,23 @@ const Inventory = () => {
                             </div>
                         </div>
 
-                        {/* Pagination Controls */}
-                        <div className="flex justify-between items-center mt-4">
+                        {/* Pagination Controls for Products */}
+                        <div className="flex justify-center gap-2 mt-4 w-[700px]">
                             <button
                                 onClick={() => paginateProducts(currentProductPage - 1)}
                                 disabled={currentProductPage === 1}
-                                className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded disabled:bg-gray-200"
+                                className="bg-gray-200 rounded px-4 py-2 disabled:opacity-50"
                             >
                                 Previous
                             </button>
-
-                            <div className="flex gap-2">
-                                {[...Array(totalProductPages)].map((_, index) => (
-                                    <button
-                                        key={index}
-                                        onClick={() => paginateProducts(index + 1)}
-                                        className={`px-4 py-2 rounded ${currentProductPage === index + 1 ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-800'
-                                            } hover:bg-gray-400`}
-                                    >
-                                        {index + 1}
-                                    </button>
-                                ))}
-                            </div>
-
                             <button
                                 onClick={() => paginateProducts(currentProductPage + 1)}
                                 disabled={currentProductPage === totalProductPages}
-                                className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded disabled:bg-gray-200"
+                                className="bg-gray-200 rounded px-4 py-2 disabled:opacity-50"
                             >
                                 Next
                             </button>
                         </div>
-
-
 
                         {/* Display current page number for Products */}
                         <div className="text-center mt-2 justify-center w-[700px]">
