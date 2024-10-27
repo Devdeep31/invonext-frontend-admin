@@ -5,14 +5,15 @@ import useFetch from '../Hooks/useFetch';
 import { initFlowbite } from 'flowbite';
 
 const Customers = () => {
+  const token = localStorage.getItem("token");
   const [customers, setCustomers] = useState([]);
   const [filteredCustomers, setFilteredCustomers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
 
-  //crud hooks
+  // CRUD hooks
   const [selectedCustomer, setSelectedCustomer] = useState({});
 
-  //Pagination . .
+  // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const customersPerPage = 10;
   const indexOfLastCustomer = currentPage * customersPerPage;
@@ -22,9 +23,6 @@ const Customers = () => {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-
-
-
   const initialState = {
     id: "",
     name: "",
@@ -33,100 +31,89 @@ const Customers = () => {
     address: "",
     balance: "",
     message: ""
+  };
+
+  const updateCustIntialState = {
+    name: selectedCustomer.name || "",
+    email: selectedCustomer.email || "",
+    phonenumber: selectedCustomer.phonenumber ||  "",
+    address: selectedCustomer.address ||  "",
+    balance: selectedCustomer.balance || "",
+    message: selectedCustomer.message || ""
   }
 
+  // Fetch customers from API
+  const fetchCustomers = async () => {
+    try {
+      const response = await myAxios('customer/customers',{
+        headers : {
+          Authorization : `Bearer ${token}`
+        }
+      });
+      setCustomers(response.data);
+      setFilteredCustomers(response.data);
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+  // Fetch customers when component mounts
+  useEffect(() => {
+    initFlowbite();
+    fetchCustomers();
+  }, []); // No dependencies required here
+
+  // Save a customer
+  
   const saveCustomer = async (val) => {
     try {
-      //const token = localStorage.getItem("token");
-      // await myAxios.post("/customer/add", val, {
-      //   headers: { Authorization: `Bearer ${token}` },
-      // });
-      await myAxios.post('/customer/add', val);
+      await myAxios.post('/customer/add', val,{
+        headers : {
+          Authorization : `Bearer ${token}`
+        }
+      });
       alert("Customer saved");
-      window.location.reload();
+      fetchCustomers(); // Re-fetch customers after saving
     } catch (error) {
       alert("Something went wrong " + error);
     }
   };
 
-  // const url = '/customer/customer/'+selectedCustomer;
-
-  // const [data, error, loading] = useFetch(url);
-  // console.log(data);
-  // const editCustomer = (val) => {
-  //   //console.log('edit clicked');
-  //   setSelectedCustomer(1);
-  //   //return(<><h1>ok{val}</h1></>)
-  // }
-
-  useEffect(() => {
-    initFlowbite();
-    (async () => {
-      try {
-        //const token = localStorage.getItem("token");
-        // const response = await myAxios.get("/customers", {
-        //   headers: { Authorization: `Bearer ${token}` },
-        // });
-        const response = await myAxios.get('customer/customers');
-        setCustomers(response.data);
-        setFilteredCustomers(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    })();
-
-    // // Drawer functionality
-    // const drawerButton = document.querySelector("[data-drawer-show='drawer-contact']");
-    // const drawer = document.getElementById("drawer-contact");
-    // const closeButton = document.querySelector("[data-drawer-hide='drawer-contact']");
-
-    // const showDrawer = () => drawer.style.transform = 'translateX(0)';
-    // const hideDrawer = () => drawer.style.transform = 'translateX(100%)';
-
-    // drawerButton.addEventListener('click', showDrawer);
-    // closeButton.addEventListener('click', hideDrawer);
-
-    // return () => {
-    //   drawerButton.removeEventListener('click', showDrawer);
-    //   closeButton.removeEventListener('click', hideDrawer);
-    // };
-  }, [currentPage,customers]);
-
-  //Search bar . . 
-  const handleSearch = (e) => {
-    const value = e.target.value.toLowerCase();
-    setSearchQuery(value);
-    setFilteredCustomers(customers.filter(c => c.name.toLowerCase().includes(value)));
-  };
-
-
-  //Customer CRUD
-
-  //update customer . . .
+  // Update a customer
   const updateCustomer = async (val) => {
     try {
       const response = await myAxios.put('/customer/update', val);
-      alert('customer updated ' + response.status);
+      alert('Customer updated ' + response.status);
+      fetchCustomers(); // Re-fetch customers after updating
     } catch (error) {
-      alert('something went wrong ' + error);
+      alert('Something went wrong ' + error);
     }
-  }
-  //get By id
+  };
+
+  // Get a customer by ID
   const getCustomer = async (val) => {
     try {
       const response = await myAxios.get('/customer/' + val);
       setSelectedCustomer(response.data);
     } catch (error) {
-      alert('someting went wrong ' + error);
+      alert('Something went wrong ' + error);
     }
-  }
+  };
+
+  // Search functionality
+  const handleSearch = (e) => {
+    const value = e.target.value.toLowerCase();
+    setSearchQuery(value);
+    setFilteredCustomers(customers.filter(c => c.name.toLowerCase().includes(value)));
+    setCurrentPage(1); // Reset to first page after search
+  };
   return (
     <>
       {/* <div className="p-2 w-full  text-left rtl:text-right text-gray-500 dark:text-gray-400 text-xs text-slate-500 uppercase  dark:text-slate-500 flex gap-4 font-bold">
         <h1 className="text-xl">Total Customers <span className="text-green-500">500</span></h1>
 
       </div> */}
-      <div className="w-[700px] p-2">
+      <div className="w-[900px] p-2">
         <div className="text-xl font-bold p-4 text-slate-500 uppercase dark:text-slate-500">
           <h1>Customers</h1>
         </div>
@@ -160,7 +147,7 @@ const Customers = () => {
               {currentCustomers.map((customer,index) => (
                 <>
 
-                  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={index}>
+                  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={customer.id}>
                     <th className="px-6 py-4 font-medium text-gray-900 dark:text-white">
                       {customer.name}
                     </th>
@@ -204,7 +191,7 @@ const Customers = () => {
             </div>
             {/* form */}
             <Formik
-              initialValues={selectedCustomer}
+              initialValues={updateCustIntialState}
               enableReinitialize={true}
               onSubmit={(val) => { updateCustomer(val) }}
             >

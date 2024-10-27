@@ -35,7 +35,7 @@ const Expense = () => {
 
         <div id="addExpense-tab-content">
             <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="addExpense" role="tabpanel" aria-labelledby="addExpense">
-                <div class="relative overflow-x-auto w-[700px] mt-4">
+                <div class="relative overflow-x-auto w-[900px] mt-4">
                     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
@@ -181,7 +181,7 @@ const Expense = () => {
         <div id="expense-tab-content">
             <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="category" role="tabpanel" aria-labelledby="category-tab">
                 {/* Tab Content */}
-                <div class="relative overflow-x-auto w-[700px] mt-4">
+                <div class="relative overflow-x-auto w-[900px] mt-4">
                     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
@@ -245,7 +245,7 @@ const Expense = () => {
 
             </div>
             <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="items" role="tabpanel" aria-labelledby="items-tab">
-                <div class="relative overflow-x-auto w-[700px] mt-4">
+                <div class="relative overflow-x-auto w-[900px] mt-4">
                     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
