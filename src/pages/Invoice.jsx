@@ -5,6 +5,8 @@ import { initFlowbite } from 'flowbite'
 import useFetch from '../components/Axios/useFetch';
 import { Field, Form, Formik, ErrorMessage, handleChange } from "formik";
 import { myAxios } from '../services/Helper';
+import useCart from './Invoice_components/useCart';
+import { Navigate , redirect, useNavigate } from "react-router-dom";
 
 
 
@@ -14,17 +16,26 @@ const Invoice = () => {
     const [activeTab, setActiveTab] = useState('sales');
     const [selectedCustomer, setSelectedCustomer] = useState({});
 
-    const [cart, setCart] = useState([]);
+    //proceed cart data . . 
+   
 
-    const addCart = (product) => {
-        setCart([...cart, product]);
-        console.log('product added to the cart');
-    }
 
-    const removeCartItem=(productId)=>{
-        setCart(cart.filter(item => item.id !== productId));
-        console.log('item removed');
-    }
+
+    // const [cart, setCart] = useState([]);
+
+    // const addCart = (product) => {
+    //     setCart([...cart, product]);
+    //     console.log('product added to the cart');
+    // }
+
+    // const removeCartItem=(productId)=>{
+    //     setCart(cart.filter(item => item.id !== productId));
+    //     console.log('item removed');
+    // }
+
+    // cart.map((item,index)=>{
+    //     console.log(item.name);
+    // })
 
 
     const handleSelectCustomer = (customer) => {
@@ -70,12 +81,90 @@ const Invoice = () => {
     const handleTabClick = (tab) => {
         setActiveTab(tab);
     };
+
+    //
+    const [getProducts,prError,prLoading] = useFetch('api/products/products');
+
+
+    function getRandomProductId(products) {
+        // Check if the products array is not empty
+        if (products.length === 0) {
+            return null; // Return null or handle empty case as needed
+        }
+        // Get a random index based on the array length
+        const randomIndex = Math.floor(Math.random() * products.length);
+        const randomProduct = products[randomIndex];
+        return randomProduct.productid;
+    }
+    const randomPrId = getRandomProductId(getProducts);
+    console.log("random id "+randomPrId+getProducts.length);
+    //
+    const invoiceInitialState = {
+        invoiceId: "",
+        customer: {
+            customerid: selectedCustomer.customerid,
+            name: selectedCustomer.name,
+            email: selectedCustomer.email,
+            phonenumber: selectedCustomer.phonenumber,
+
+            address: selectedCustomer.address,
+            balance: "",
+            message: ""
+        },
+        products: [
+            {
+                productid: randomPrId,
+                name: "",
+                price: "",
+                quantity: "",
+                image: "",
+                description: "",
+                category: ""
+            }
+        ],
+        paymentName: selectedCustomer.name,
+        paymentNum: selectedCustomer.phonenumber,
+        address: selectedCustomer.address,
+        gstin: "",
+        billNum: "",
+        billDate: "",
+        termDueDate: ""
+    }
+   // const navigate = useNavigate();
+
+    const invoiceCustomer = async (invoiceCustomer) => {
+        try {
+            const response = await myAxios.post('/api/invoices', invoiceCustomer, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            //if(response.status === 201){alert('done')}
+            //navigate('/invoice/selectproducts')
+        } catch (error) {
+            alert(error);
+        }
+    }
+
+   
+        const [navigate, setNavigate] = React.useState(false);
+    
+        const handleRedirect = () => {
+            // Specify the URL you want to open
+            const url = 'http://localhost:3000/invoice/selectproducts'; // Change to your desired URL
+            window.open(url, '_blank'); // Opens the URL in a new tab
+        };
+
+
+
+
     //to work flowbite in chromiam based browsers . . 
     useEffect(() => {
         initFlowbite();
     }, [activeTab]);
     return (
         <>
+            
 
 
             <div className="p-2 w-full  text-left rtl:text-right text-gray-500 dark:text-gray-400 text-xs text-slate-500 uppercase  dark:text-slate-500 flex gap-4 font-bold">
@@ -200,11 +289,11 @@ const Invoice = () => {
                             <div class="flex justify-between items-center p-4 border-b">
                                 <h3 class="text-xl font-semibold text-gray-900">Create sales invoice</h3>
                                 <button type="button" data-drawer-hide="sale-invoice-modal" aria-controls="sale-invoice-modal" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 absolute top-2.5 end-2.5 flex items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white" >
-      <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-      </svg>
-      <span class="sr-only">Close menu</span>
-   </button>
+                                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                    </svg>
+                                    <span class="sr-only">Close menu</span>
+                                </button>
                             </div>
 
 
@@ -213,7 +302,8 @@ const Invoice = () => {
                             <div class="p-4 space-y-6 w-full">
                                 {/* <!-- Party Details --> */}
                                 <Formik
-                                    initialValues={SelectedCustInitialState}
+                                    initialValues={invoiceInitialState}
+                                    onSubmit={(val)=>{invoiceCustomer(val)}}
                                     enableReinitialize={true}
                                 >
                                     {({ values, handleChange }) => (
@@ -230,6 +320,7 @@ const Invoice = () => {
                                                         {selectedCustomer.name ? selectedCustomer.name : "Party name*"}
                                                         {/* <!-- Add party options dynamically --> */}
                                                     </button>
+                                                    {/* <Field value={selected} /> */}
                                                 </div>
                                                 <div>
                                                     <label for="phone-number" class="block text-sm font-medium text-gray-700">Phone Number</label>
@@ -241,7 +332,7 @@ const Invoice = () => {
                                                 </div>
                                                 <div>
                                                     <label for="gstin" class="block text-sm font-medium text-gray-700">GSTIN</label>
-                                                    <Field type="text" id="gstin" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Enter GSTIN" />
+                                                    <Field name="gstin" type="text" id="gstin" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Enter GSTIN" />
                                                 </div>
                                             </div>
 
@@ -254,15 +345,15 @@ const Invoice = () => {
                                                 </div>
                                                 <div>
                                                     <label for="bill-date" class="block text-sm font-medium text-gray-700">Bill Date</label>
-                                                    <input type="date" id="bill-date" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+                                                    <Field name="billdate" type="date" id="bill-date" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" />
                                                 </div>
                                                 <div>
                                                     <label for="payment-terms" class="block text-sm font-medium text-gray-700">Payment Terms & Due Date</label>
-                                                    <input type="text" id="payment-terms" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="0 Days" />
+                                                    <Field  type="text" id="payment-terms" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="0 Days" />
                                                 </div>
                                                 <div>
                                                     <label for="due-date" class="block text-sm font-medium text-gray-700">Due Date</label>
-                                                    <input type="date" id="due-date" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+                                                    <Field name="termDueDate" type="date" id="due-date" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" />
                                                 </div>
                                             </div>
 
@@ -296,7 +387,10 @@ const Invoice = () => {
                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                                <button type='button' class="mt-3 text-blue-600 hover:underline" data-drawer-target="category-drawer" data-drawer-show="category-drawer" data-drawer-placement="right" aria-controls="category-drawer" >+ Select Items from Inventory</button>
+                                                <div>
+                                                <button type='submit'  onClick={handleRedirect} class="mt-3 text-blue-600 hover:underline"  >+ Select Items from Inventory</button>
+                                               
+                                                </div>
 
                                                 {/* <div class="text-center">
                                         <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" type="button" data-drawer-target="category-drawer" data-drawer-show="category-drawer" data-drawer-placement="right" aria-controls="category-drawer">
@@ -308,163 +402,15 @@ const Invoice = () => {
                                                 {/*Show selected products dertails*/}
 
 
-                                                {/* <!-- drawer component for select product --> */}
-                                                <div id="category-drawer" class="fixed top-0 right-0 z-40 h-screen p-4 overflow-y-auto transition-transform translate-x-full bg-white w-full dark:bg-gray-800" tabindex="-1" aria-labelledby="drawer-right-label">
-                                                    <h5 id="drawer-right-label" class="inline-flex items-center mb-4 text-base font-semibold text-gray-500 dark:text-gray-400"><svg class="w-4 h-4 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
-                                                    </svg>Select Product</h5>
-                                                    <button type="button" data-drawer-hide="category-drawer" aria-controls="category-drawer" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 absolute top-2.5 end-2.5 inline-flex items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white" >
-                                                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                                                        </svg>
-                                                        <span class="sr-only">Close menu</span>
-                                                    </button>
 
-
-                                                    <div className='flex gap-4'>
-                                                        <div className='w-1/2'>
-                                                            {/* Dropdown */}
-                                                            <label
-                                                                htmlFor="subject"
-                                                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                                            >
-                                                                Choose a category
-                                                            </label>
-                                                            <Field
-                                                                as="select"
-                                                                name="category"
-                                                                id="category"
-                                                                onChange={(event) => {
-                                                                    handleChange(event); // Update form state
-                                                                    getProductByCategory(event.target.value); // Call function to fetch products by selected category
-                                                                }}
-                                                                className="form-select rounded-xl"
-                                                            >
-                                                                <option value="" label="Select category" />
-                                                                {categories.map((category, index) => (
-                                                                    <option key={index} value={category.category_name}>
-                                                                        {category.category_name}
-                                                                    </option>
-                                                                ))}
-                                                            </Field>
-
-
-                                                            {/* Show validation error */}
-                                                            <ErrorMessage name="category" component="div" className="text-red-500" />
-
-
-
-
-                                                            <div class="mt-2 relative overflow-x-auto">
-                                                                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                                                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                                                        <tr>
-                                                                            <th scope="col" class="px-6 py-3">
-                                                                                Product name
-                                                                            </th>
-
-                                                                            <th scope="col" class="px-6 py-3">
-                                                                                Price
-                                                                            </th>
-                                                                            <th scope="col" class="px-6 py-3">
-                                                                                Quantity
-                                                                            </th>
-                                                                            <th scope="col" class="px-6 py-3">
-                                                                                Add
-                                                                            </th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        {selectedCategoryProducts.map((product, index) => (
-                                                                            <tr key={index} class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                                                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                                                    {product.name}
-                                                                                </th>
-                                                                                <td class="px-6 py-4">
-                                                                                    {product.price}
-                                                                                </td>
-                                                                                <td class="px-6 py-4">
-                                                                                    <div>
-                                                                                        <input type="number" name="number" id="quantity" placeholder="" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-20 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"  />
-                                                                                    </div>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <button
-                                                                                        onClick={() => { addCart(product) }}
-                                                                                        type="button" class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Add</button>
-                                                                                </td>
-                                                                            </tr>
-                                                                        ))}
-
-
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-
-                                                        </div>
-
-                                                        <div className='w-1/2  mt-[77px] relative overflow-x-auto'>
-                                                            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                                                                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                                                    <tr>
-                                                                        <th scope="col" class="px-6 py-3">
-                                                                            Product name
-                                                                        </th>
-                                                                        <th scope="col" class="px-6 py-3">
-                                                                            Quantity
-                                                                        </th>
-                                                                        <th scope="col" class="px-6 py-3">
-                                                                            Total price
-                                                                        </th>
-                                                                        <th>
-
-                                                                        </th>
-                                                                    </tr>
-
-                                                                </thead>
-
-                                                                <tbody>
-                                                                    {cart.map((cart, index) => (<>
-
-                                                                        <tr key={index} class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                                                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                                                {cart.name}
-                                                                            </th>
-                                                                            <td class="px-6 py-4">
-                                                                                {cart.price}
-                                                                            </td>
-                                                                            <td class="px-6 py-4">
-                                                                                {cart.price}
-                                                                            </td>
-                                                                            <td>
-                                                                                <button type='button' onClick={()=>{removeCartItem(cart.productid)}}><i class='bx bx-trash-alt text-xl' ></i></button>
-                                                                 
-                                                       
-                                                                            </td>
-                                                                        </tr>
-
-                                                                    </>))}
-
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-
-                                                        {/* // Function to remove product from cart
-                                                         const removeFromCart = (productId) => {
-                                                            setCart(cart.filter(item => item.id !== productId));
-   
-                                                        }; */}
-
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                            <div class="flex justify-end p-4 border-t">
-                                                <button class="bg-blue-600 text-white px-5 py-2 rounded-md hover:bg-blue-700 focus:ring-4 focus:ring-blue-300" onclick="submitInvoice()">Create Invoice</button>
                                             </div>
                                         </Form>
                                     )}
                                 </Formik>
+                                <div class="flex justify-end p-4 border-t">
+                                    <button class="bg-blue-600 text-white px-5 py-2 rounded-md hover:bg-blue-700 focus:ring-4 focus:ring-blue-300" onclick="submitInvoice()">Create Invoice</button>
+                                </div>
+
 
                             </div>
 
@@ -561,6 +507,51 @@ const Invoice = () => {
 
 
             </div >
+
+
+
+            
+
+<!-- Modal toggle -->
+<button data-modal-target="default-modal" data-modal-toggle="default-modal" class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+  Toggle modal
+</button>
+
+
+<div id="default-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-2xl max-h-full">
+       
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+           
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                   Select Product
+                </h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="default-modal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+           
+            <div class="p-4 md:p-5 space-y-4">
+                <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                    With less than a month to go before the European Union enacts new consumer privacy laws for its citizens, companies around the world are updating their terms of service agreements to comply.
+                </p>
+                <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                    The European Union’s General Data Protection Regulation (G.D.P.R.) goes into effect on May 25 and is meant to ensure a common set of data rights in the European Union. It requires organizations to notify users as soon as possible of high-risk data breaches that could personally affect them.
+                </p>
+            </div>
+        
+            <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                <button data-modal-hide="default-modal" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">I accept</button>
+                <button data-modal-hide="default-modal" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Decline</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 

@@ -16,6 +16,7 @@ import Dashboard from './pages/Dashboard';
 import Expense from './pages/Expense';
 import TestPagination from './pages/Test';
 import GenerateReport from './services/GenerateRepot';
+import SelectProducts from './pages/Invoice_components/productmng';
 
 function App() {
 
@@ -25,6 +26,7 @@ function App() {
         {/* seprate routes here */}
         <Route path='/' element={<Login />} />
         <Route path='/login' element={<Login />} />
+        <Route path='/invoice/selectproducts' element={<SelectProducts/>}/>
         <Route path='/form' element={<GenerateReport />} />
         <Route element={<Application />}>
           <Route path='/dashboard' element={<Dashboard />} />
@@ -37,6 +39,9 @@ function App() {
         </Route>
       </Routes>
     </Router>
+
+
+
   );
 }
 

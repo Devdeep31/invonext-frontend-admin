@@ -7,9 +7,12 @@ import { Field, Form, Formik, ErrorMessage, handleChange } from 'formik';
 import * as Yup from 'yup'; // For validation
 import inventoryimage from '../assets/images/inventory.png'
 
+
 const Inventory = () => {
 
     const token = localStorage.getItem("token");
+
+    
 
 
 
