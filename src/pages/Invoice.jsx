@@ -8,10 +8,24 @@ import { myAxios } from '../services/Helper';
 
 
 
+
 const Invoice = () => {
     const token = localStorage.getItem("token");
     const [activeTab, setActiveTab] = useState('sales');
     const [selectedCustomer, setSelectedCustomer] = useState({});
+
+    const [cart, setCart] = useState([]);
+
+    const addCart = (product) => {
+        setCart([...cart, product]);
+        console.log('product added to the cart');
+    }
+
+    const removeCartItem=(productId)=>{
+        setCart(cart.filter(item => item.id !== productId));
+        console.log('item removed');
+    }
+
 
     const handleSelectCustomer = (customer) => {
         setSelectedCustomer(customer);
@@ -179,18 +193,21 @@ const Invoice = () => {
                         Toggle modal
                     </button> */}
 
-                    {/* <!-- Invoice Modal --> */}
+                    {/* <!-- Invoice Modal  sale-invoice-modal --> */}
                     <div id="sale-invoice-modal" tabindex="-1" aria-hidden="true" className="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-2">
                         <div class="p-2 bg-white rounded-lg shadow-lg w-full max-w-6xl">
                             {/* <!-- Modal Header --> */}
                             <div class="flex justify-between items-center p-4 border-b">
                                 <h3 class="text-xl font-semibold text-gray-900">Create sales invoice</h3>
-                                <button type="button" class="text-gray-400 hover:text-gray-600" onclick="closeModal()">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                    </svg>
-                                </button>
+                                <button type="button" data-drawer-hide="sale-invoice-modal" aria-controls="sale-invoice-modal" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 absolute top-2.5 end-2.5 flex items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white" >
+      <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+      </svg>
+      <span class="sr-only">Close menu</span>
+   </button>
                             </div>
+
+
 
                             {/* <!-- Modal Body --> */}
                             <div class="p-4 space-y-6 w-full">
@@ -287,8 +304,12 @@ const Invoice = () => {
                                         </button>
                                     </div> */}
 
-                                                {/* <!-- drawer component --> */}
-                                                <div id="category-drawer" class="fixed top-0 right-0 z-40 h-screen p-4 overflow-y-auto transition-transform translate-x-full bg-white w-1/2 dark:bg-gray-800" tabindex="-1" aria-labelledby="drawer-right-label">
+
+                                                {/*Show selected products dertails*/}
+
+
+                                                {/* <!-- drawer component for select product --> */}
+                                                <div id="category-drawer" class="fixed top-0 right-0 z-40 h-screen p-4 overflow-y-auto transition-transform translate-x-full bg-white w-full dark:bg-gray-800" tabindex="-1" aria-labelledby="drawer-right-label">
                                                     <h5 id="drawer-right-label" class="inline-flex items-center mb-4 text-base font-semibold text-gray-500 dark:text-gray-400"><svg class="w-4 h-4 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                                         <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
                                                     </svg>Select Product</h5>
@@ -298,10 +319,10 @@ const Invoice = () => {
                                                         </svg>
                                                         <span class="sr-only">Close menu</span>
                                                     </button>
-                                                    <div>
 
 
-                                                        <div>
+                                                    <div className='flex gap-4'>
+                                                        <div className='w-1/2'>
                                                             {/* Dropdown */}
                                                             <label
                                                                 htmlFor="subject"
@@ -330,85 +351,113 @@ const Invoice = () => {
 
                                                             {/* Show validation error */}
                                                             <ErrorMessage name="category" component="div" className="text-red-500" />
+
+
+
+
+                                                            <div class="mt-2 relative overflow-x-auto">
+                                                                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                                                        <tr>
+                                                                            <th scope="col" class="px-6 py-3">
+                                                                                Product name
+                                                                            </th>
+
+                                                                            <th scope="col" class="px-6 py-3">
+                                                                                Price
+                                                                            </th>
+                                                                            <th scope="col" class="px-6 py-3">
+                                                                                Quantity
+                                                                            </th>
+                                                                            <th scope="col" class="px-6 py-3">
+                                                                                Add
+                                                                            </th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        {selectedCategoryProducts.map((product, index) => (
+                                                                            <tr key={index} class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                                                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                                                    {product.name}
+                                                                                </th>
+                                                                                <td class="px-6 py-4">
+                                                                                    {product.price}
+                                                                                </td>
+                                                                                <td class="px-6 py-4">
+                                                                                    <div>
+                                                                                        <input type="number" name="number" id="quantity" placeholder="" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-20 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"  />
+                                                                                    </div>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <button
+                                                                                        onClick={() => { addCart(product) }}
+                                                                                        type="button" class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Add</button>
+                                                                                </td>
+                                                                            </tr>
+                                                                        ))}
+
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+
                                                         </div>
 
-
-
-                                                        <div class="mt-2 relative overflow-x-auto">
+                                                        <div className='w-1/2  mt-[77px] relative overflow-x-auto'>
                                                             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                                                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                                                     <tr>
                                                                         <th scope="col" class="px-6 py-3">
                                                                             Product name
                                                                         </th>
-                                                                        
-                                                                        <th scope="col" class="px-6 py-3">
-                                                                            Price
-                                                                        </th>
                                                                         <th scope="col" class="px-6 py-3">
                                                                             Quantity
                                                                         </th>
+                                                                        <th scope="col" class="px-6 py-3">
+                                                                            Total price
+                                                                        </th>
+                                                                        <th>
+
+                                                                        </th>
                                                                     </tr>
+
                                                                 </thead>
+
                                                                 <tbody>
-                                                                {selectedCategoryProducts.map((product, index) => (
-            <tr key={index} class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    {product.name}
-                </th>
-                <td class="px-6 py-4">
-                    {/* Placeholder for additional product information */}
-                </td>
-                <td class="px-6 py-4">
-                    <div>
-                       
-                        <div class="relative flex items-center max-w-[8rem]">
-                            <button 
-                                type="button" 
-                                data-input-counter-decrement={`quantity-input-${index}`} 
-                                class="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-s-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
-                            >
-                                <svg class="w-3 h-3 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h16"/>
-                                </svg>
-                            </button>
+                                                                    {cart.map((cart, index) => (<>
 
-                            <input 
-                                type="text" 
-                                id={`quantity-input-${index}`} 
-                                data-input-counter 
-                                class="bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
-                                placeholder="0" 
-                                required
-                            />
+                                                                        <tr key={index} class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                                                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                                                {cart.name}
+                                                                            </th>
+                                                                            <td class="px-6 py-4">
+                                                                                {cart.price}
+                                                                            </td>
+                                                                            <td class="px-6 py-4">
+                                                                                {cart.price}
+                                                                            </td>
+                                                                            <td>
+                                                                                <button type='button' onClick={()=>{removeCartItem(cart.productid)}}><i class='bx bx-trash-alt text-xl' ></i></button>
+                                                                 
+                                                       
+                                                                            </td>
+                                                                        </tr>
 
-                            <button 
-                                type="button" 
-                                data-input-counter-increment={`quantity-input-${index}`} 
-                                class="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-e-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
-                            >
-                                <svg class="w-3 h-3 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        ))}
-                                                                    
-                                                                    
+                                                                    </>))}
+
                                                                 </tbody>
                                                             </table>
                                                         </div>
 
-
-
-                                        
-
+                                                        {/* // Function to remove product from cart
+                                                         const removeFromCart = (productId) => {
+                                                            setCart(cart.filter(item => item.id !== productId));
+   
+                                                        }; */}
 
                                                     </div>
                                                 </div>
+
                                             </div>
                                             <div class="flex justify-end p-4 border-t">
                                                 <button class="bg-blue-600 text-white px-5 py-2 rounded-md hover:bg-blue-700 focus:ring-4 focus:ring-blue-300" onclick="submitInvoice()">Create Invoice</button>
@@ -509,77 +558,8 @@ const Invoice = () => {
                     {/* <!-- drawer init and toggle --> */}
 
                 </div>}
-                {activeTab === 'purchase' && <div>
-                    <h1 className='text-xl font-bold text-gray-500'>Purchase Invoice</h1>
-
-                    <div class="pb-4 mt-10">
-                        <label for="table-search" class="sr-only">Search</label>
-                        <div class="relative mt-1">
-                            <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
-                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-                                </svg>
-                            </div>
-                            <input type="text" id="table-search" class="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for purchase invoice" />
-                        </div>
-                    </div>
-
-                    {/* Table */}
-                    <div class="max-h-[200px] overflow-y-auto custom-scrollbar">
-                        <table class="w-[900px] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 justify-between text-center">
-                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                <tr class="sticky top-0 bg-gray-50 dark:bg-gray-700">
-                                    <th scope="col" class="px-6 py-3">PURCHASE</th>
-                                    <th scope="col" class="px-6 py-3">AMOUNT</th>
-                                    <th scope="col" class="px-6 py-3">PAYMENT STATUS</th>
-                                    <th scope="col" class="px-6 py-3">Details</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">Lisa</th>
-                                    <td class="px-6 py-4 text-green-400">₹0</td>
-                                    <td class="px-6 py-4 text-red-500">Pending</td>
-                                    <td><button class="text-gray-800 dark:text-white h-6 rounded p-1">View</button></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">Sharwari</th>
-                                    <td class="px-6 py-4 text-green-400">₹1000</td>
-                                    <td class="px-6 py-4 text-green-400">Paid</td>
-                                    <td><button class="text-gray-800 dark:text-white h-6 rounded p-1">View</button></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">Alex</th>
-                                    <td class="px-6 py-4 text-green-400">₹250</td>
-                                    <td class="px-6 py-4 text-green-400">Paid</td>
-                                    <td><button class="text-gray-800 dark:text-white h-6 rounded p-1">View</button></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">Maria</th>
-                                    <td class="px-6 py-4 text-green-400">₹500</td>
-                                    <td class="px-6 py-4 text-red-500">Pending</td>
-                                    <td><button class="text-gray-800 dark:text-white h-6 rounded p-1">View</button></td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">Sophia</th>
-                                    <td class="px-6 py-4 text-green-400">₹1200</td>
-                                    <td class="px-6 py-4 text-green-400">Paid</td>
-                                    <td><button class="text-gray-800 dark:text-white h-6 rounded p-1">View</button></td>
-                                </tr>
-
-                            </tbody>
-                        </table>
-                    </div>
 
 
-
-
-
-
-
-
-
-                </div>}
             </div >
 
 
