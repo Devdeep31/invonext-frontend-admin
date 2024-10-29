@@ -1,6 +1,8 @@
 import React from "react";
 import { useRef } from "react";
 import { useReactToPrint } from "react-to-print";
+import 'flowbite';
+import { initFlowbite } from 'flowbite'
 
 const GenerateReport = () => {
   // Ref for the printable component

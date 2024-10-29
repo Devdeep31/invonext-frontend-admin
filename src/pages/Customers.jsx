@@ -1,5 +1,5 @@
 import { Formik, Form, Field } from 'formik';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { myAxios } from '../services/Helper';
 import useFetch from '../Hooks/useFetch';
 import { initFlowbite } from 'flowbite';
@@ -24,7 +24,7 @@ const Customers = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const initialState = {
-    id: "",
+
     name: "",
     email: "",
     phonenumber: "",
@@ -34,10 +34,11 @@ const Customers = () => {
   };
 
   const updateCustIntialState = {
+    customerid: selectedCustomer.customerid || "",
     name: selectedCustomer.name || "",
     email: selectedCustomer.email || "",
-    phonenumber: selectedCustomer.phonenumber ||  "",
-    address: selectedCustomer.address ||  "",
+    phonenumber: selectedCustomer.phonenumber || "",
+    address: selectedCustomer.address || "",
     balance: selectedCustomer.balance || "",
     message: selectedCustomer.message || ""
   }
@@ -45,9 +46,9 @@ const Customers = () => {
   // Fetch customers from API
   const fetchCustomers = async () => {
     try {
-      const response = await myAxios('api/customer/customers',{
-        headers : {
-          Authorization : `Bearer ${token}`
+      const response = await myAxios('api/customer/customers', {
+        headers: {
+          Authorization: `Bearer ${token}`
         }
       });
       setCustomers(response.data);
@@ -57,19 +58,25 @@ const Customers = () => {
     }
   };
 
+  const dataRef = useRef(customers);
+
+  useEffect(() => {
+    dataRef.current = customers; // Update the ref whenever `data` changes
+  }, [filteredCustomers, currentPage]);
+
   // Fetch customers when component mounts
   useEffect(() => {
     initFlowbite();
     fetchCustomers();
-  }, []); // No dependencies required here
+  }, [currentPage]); // No dependencies required here
 
   // Save a customer
-  
+
   const saveCustomer = async (val) => {
     try {
-      await myAxios.post('api/customer/add', val,{
-        headers : {
-          Authorization : `Bearer ${token}`
+      await myAxios.post('/api/customer/add', val, {
+        headers: {
+          Authorization: `Bearer ${token}`
         }
       });
       alert("Customer saved");
@@ -82,7 +89,11 @@ const Customers = () => {
   // Update a customer
   const updateCustomer = async (val) => {
     try {
-      const response = await myAxios.put('api/customer/update', val);
+      const response = await myAxios.put('/api/customer/update', val, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       alert('Customer updated ' + response.status);
       fetchCustomers(); // Re-fetch customers after updating
     } catch (error) {
@@ -93,12 +104,30 @@ const Customers = () => {
   // Get a customer by ID
   const getCustomer = async (val) => {
     try {
-      const response = await myAxios.get('api/customer/' + val);
+      const response = await myAxios.get('api/customer/' + val, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       setSelectedCustomer(response.data);
     } catch (error) {
       alert('Something went wrong ' + error);
     }
   };
+
+  const deleteCustomer=async(val)=>{
+    try{
+        const response = await myAxios.delete('/api/customer/delete/'+val,{
+            headers : {
+                Authorization : `Bearer ${token}`
+            }
+        })
+        fetchCustomers();
+        if(response.status === 200){alert('Customer deleted')}
+    }catch(error){
+        alert(error);
+    }
+}
 
   // Search functionality
   const handleSearch = (e) => {
@@ -144,7 +173,7 @@ const Customers = () => {
               </tr>
             </thead>
             <tbody>
-              {currentCustomers.map((customer,index) => (
+              {currentCustomers.map((customer, index) => (
                 <>
 
                   <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={customer.id}>
@@ -157,7 +186,7 @@ const Customers = () => {
                         data-modal-target="editCustomer-modal"
                         data-modal-toggle="editCustomer-modal"
                         onClick={() => {
-                          getCustomer(customer.id);
+                          getCustomer(customer.customerid);
                         }}
                         className="text-blue-500 dark:text-blue-200 h-6 rounded p-1">View</button>
                     </td>
@@ -182,13 +211,48 @@ const Customers = () => {
               <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                 Update Entry
               </h3>
-              <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="editCustomer-modal">
-                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                </svg>
-                <span class="sr-only">Close modal</span>
-              </button>
+              <div className='flex gap-4'>
+                <button data-modal-target="popup-delete-customer"
+                  data-modal-toggle="popup-delete-customer" className='text-red-500 hover:bg-gray-200 p-1 rounded-lg'><i class='bx bx-trash-alt text-xl' ></i></button>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="editCustomer-modal">
+
+                  <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                  </svg>
+                  <span class="sr-only">Close modal</span>
+                </button>
+              </div>
             </div>
+
+
+            <div id="popup-delete-customer" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+              <div class="relative p-4 w-full max-w-md max-h-full">
+                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+
+                  <button type="button" class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="popup-delete-customer">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                  </button>
+                  <div class="p-4 md:p-5 text-center">
+                    <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                    <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Are you sure you want to delete this customer?</h3>
+                    <button
+
+                      onClick={()=>{deleteCustomer(selectedCustomer.customerid)}}
+
+                      data-modal-hide="popup-delete-customer" type="button" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
+                      Yes, I'm sure
+                    </button>
+                    <button data-modal-hide="popup-delete-customer" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">No, cancel</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* form */}
             <Formik
               initialValues={updateCustIntialState}

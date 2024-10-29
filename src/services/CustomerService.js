@@ -21,9 +21,8 @@ export const Login = () => {
         try {
             const response = await myAxios.post('/login', body);
             localStorage.setItem('token', response.data.token);
-            alert("Login Successful")
             if(response.status === 200){
-                navigate('/cashbook');
+                navigate('/dashboard');
             }
         } catch (error) {
             alert('Login Failed !')
