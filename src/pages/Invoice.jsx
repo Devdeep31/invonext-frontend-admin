@@ -16,7 +16,11 @@ const Invoice = () => {
     const [activeTab, setActiveTab] = useState('sales');
     const [selectedCustomer, setSelectedCustomer] = useState({});
 
+    //const [selectedInvocie, setSelectedInvocie] = useState(null);
+
     //proceed cart data . . 
+
+   
    
 
 
@@ -42,13 +46,13 @@ const Invoice = () => {
         setSelectedCustomer(customer);
     }
 
-    let num
+    
 
     const SelectedCustInitialState = {
         name: selectedCustomer.name,
         phonenumber: selectedCustomer.phonenumber,
         address: selectedCustomer.address,
-        invoice_id: "INXT" + Math.floor((Math.random() * 100000000) + 1)
+        //invoice_id: "INXT" + Math.floor((Math.random() * 100000000) + 1)
     }
     console.log(selectedCustomer.name + " " + selectedCustomer.phonenumber + " " + SelectedCustInitialState.address);
 
@@ -172,8 +176,19 @@ const removeCartItem = (productid) => {
     const randomPrId = getRandomProductId(getProducts);
     console.log("random id "+randomPrId+getProducts.length);
     //
+    //setSelectedInvocie(SelectedCustInitialState.invoice_id);
+    //const selectedInvoiceId = SelectedCustInitialState.invoice_id;
+    const [invoiceID, setInvoiceID] = useState('');
+    console.log('invoice id '+invoiceID);
+    
+    const generateInvoiceId=()=>{
+        const id = "INXT" + Math.floor((Math.random() * 100000000) + 1);
+        setInvoiceID(id);
+    }
+    
+    
     const invoiceInitialState = {
-        invoiceId: SelectedCustInitialState.invoice_id,
+        invoiceId: invoiceID,
         customer: {
             customerid: selectedCustomer.customerid,
             name: selectedCustomer.name,
@@ -195,7 +210,11 @@ const removeCartItem = (productid) => {
         billDate: "",
         termDueDate: ""
     }
+    const generateInvoice=()=>{
+        window.open(`/invoice-view?invoiceId=${invoiceInitialState.invoiceId}`, '_blank');
+    }
    // const navigate = useNavigate();
+   const[isInvoiceSaveTriggered, setIsInvoiceSaveTriggerd] = useState(false);
 
     const invoiceCustomer = async (invoiceCustomer) => {
         try {
@@ -204,6 +223,7 @@ const removeCartItem = (productid) => {
                     Authorization: `Bearer ${token}`
                 }
             });
+            setIsInvoiceSaveTriggerd(true);
             if(response.status === 201){alert('done')}
             //navigate('/invoice/selectproducts')
         } catch (error) {
@@ -333,8 +353,8 @@ const removeCartItem = (productid) => {
 
                     </div>
 
-                    <div className='flex justify-end mt-4 w-[700px]'>
-                        <button data-modal-target="sale-invoice-modal" data-modal-toggle="sale-invoice-modal" class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+                    <div  className='flex justify-end mt-4 w-[700px]'>
+                        <button onClick={()=>{generateInvoiceId()}} data-modal-target="sale-invoice-modal" data-modal-toggle="sale-invoice-modal" class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
                             + Sales
                         </button>
                     </div>
@@ -406,7 +426,7 @@ const removeCartItem = (productid) => {
                                             <div class="grid grid-cols-2 gap-4">
                                                 <div>
                                                     <label for="bill-number" class="block text-sm font-medium text-gray-700">Bill Number</label>
-                                                    <Field name="invoiceId" value={selectedCustomer.name ? SelectedCustInitialState.invoice_id : "Invoice Id"} type="text" id="bill-number" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+                                                    <Field name="invoiceId" value={selectedCustomer.name ? invoiceInitialState.invoiceId : "Invoice Id"} type="text" id="bill-number" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" />
                                                 </div>
                                                 <div>
                                                     <label for="bill-date" class="block text-sm font-medium text-gray-700">Bill Date</label>
@@ -473,8 +493,11 @@ const removeCartItem = (productid) => {
 
                                                 {/*Show selected products dertails*/}
 
-                                                <div class="flex justify-end p-4 border-t">
-                                    <button type='submit' class="bg-blue-600 text-white px-5 py-2 rounded-md hover:bg-blue-700 focus:ring-4 focus:ring-blue-300">Create Invoice</button>
+                                                <div class="flex gap-2 justify-end p-4 border-t">
+                                    {cart.length!==0 ? (<button type='submit' class="bg-blue-600 text-white px-5 py-2 rounded-md hover:bg-blue-700 focus:ring-4 focus:ring-blue-300">Save</button>) : (<h1 className='text-red-500'>*Add customer details & add products to the cart to generate an invoice</h1>)}
+                                    
+                                    {isInvoiceSaveTriggered ? (<button onClick={()=>{generateInvoice()}} type='button' class="bg-blue-600 text-white px-5 py-2 rounded-md hover:bg-blue-700 focus:ring-4 focus:ring-blue-300">Generate invoice</button>) : ''}
+                                    
                                 </div>
 
 
@@ -611,13 +634,7 @@ const removeCartItem = (productid) => {
                 <h5 id="drawer-right-label" class="inline-flex items-center mb-4 text-base font-semibold text-gray-500 dark:text-gray-400"><svg class="w-4 h-4 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
                 </svg>Select Product</h5>
-                <button type="button" data-drawer-hide="category-drawer" aria-controls="category-drawer" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 absolute top-2.5 end-2.5 inline-flex items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white" >
-                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                    </svg>
-                    <span class="sr-only">Close menu</span>
-                </button>
-
+                
 
                 <div className='flex gap-4'>
                     <div className='w-1/2'>

@@ -18,6 +18,7 @@ import TestPagination from './pages/Test';
 import GenerateReport from './services/GenerateRepot';
 import SelectProducts from './pages/Invoice_components/productmng';
 import InvoiceGenerator from './pages/Test';
+import GenerateInvoice from './pages/Invoice_components/GenerateInvoice';
 
 function App() {
 
@@ -29,7 +30,7 @@ function App() {
         <Route path='/login' element={<Login />} />
         <Route path='/invoice/selectproducts' element={<SelectProducts/>}/>
         <Route path='/form' element={<GenerateReport />} />
-        <Route path='/invo' element={<InvoiceGenerator />} />
+        <Route path="/invoice-view" element={<GenerateInvoice />} />
         <Route element={<Application />}>
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/cashbook' element={<CashBook />} />

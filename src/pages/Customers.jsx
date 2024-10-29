@@ -45,7 +45,7 @@ const Customers = () => {
   // Fetch customers from API
   const fetchCustomers = async () => {
     try {
-      const response = await myAxios('customer/customers',{
+      const response = await myAxios('api/customer/customers',{
         headers : {
           Authorization : `Bearer ${token}`
         }
@@ -67,7 +67,7 @@ const Customers = () => {
   
   const saveCustomer = async (val) => {
     try {
-      await myAxios.post('/customer/add', val,{
+      await myAxios.post('api/customer/add', val,{
         headers : {
           Authorization : `Bearer ${token}`
         }
@@ -82,7 +82,7 @@ const Customers = () => {
   // Update a customer
   const updateCustomer = async (val) => {
     try {
-      const response = await myAxios.put('/customer/update', val);
+      const response = await myAxios.put('api/customer/update', val);
       alert('Customer updated ' + response.status);
       fetchCustomers(); // Re-fetch customers after updating
     } catch (error) {
@@ -93,7 +93,7 @@ const Customers = () => {
   // Get a customer by ID
   const getCustomer = async (val) => {
     try {
-      const response = await myAxios.get('/customer/' + val);
+      const response = await myAxios.get('api/customer/' + val);
       setSelectedCustomer(response.data);
     } catch (error) {
       alert('Something went wrong ' + error);
