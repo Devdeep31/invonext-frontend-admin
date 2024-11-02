@@ -120,10 +120,7 @@ const Invoice = () => {
     //////////////////////////////////////////////////////////////////////////////////////////
     const [cart, setCart] = useState([]);
 
-    const [cartquantity, setCartquantity] = useState('');
-
-
-
+    const [cartQuantity, setCartquantity] = useState('');
 
     // Add `cartQuantity` to the product when adding it to the cart
     const addCart = (product) => {
@@ -133,11 +130,11 @@ const Invoice = () => {
         if (existingItemIndex >= 0) {
             // If product exists, update its cartQuantity
             const updatedCart = [...cart];
-            updatedCart[existingItemIndex].cartQuantity += parseInt(cartquantity, 10); // Add new quantity to existing cartQuantity
+            updatedCart[existingItemIndex].cartQuantity += parseInt(cartQuantity, 10); // Add new quantity to existing cartQuantity
             setCart(updatedCart);
         } else {
             // Add product with initial cartQuantity
-            const productWithCartQuantity = { ...product, cartQuantity: parseInt(cartquantity, 10) };
+            const productWithCartQuantity = { ...product, cartQuantity: parseInt(cartQuantity, 10) };
             setCart([...cart, productWithCartQuantity]);
         }
 
@@ -149,6 +146,8 @@ const Invoice = () => {
     const handleInputChange = (e) => {
         setCartquantity(e.target.value); // Update quantity from input
     };
+
+    //console.log(cart.map((c)=>{`cart ****`+c.cartQuantity,c.name}));
 
 
     // Define removeCartItem function to remove a specific product from the cart
@@ -174,7 +173,7 @@ const Invoice = () => {
         return randomProduct.productid;
     }
     const randomPrId = getRandomProductId(getProducts);
-    console.log("random id " + randomPrId + getProducts.length);
+    //console.log("random id " + randomPrId + getProducts.length);
     //
     //setSelectedInvocie(SelectedCustInitialState.invoice_id);
     //const selectedInvoiceId = SelectedCustInitialState.invoice_id;
@@ -208,7 +207,8 @@ const Invoice = () => {
         gstin: "",
         billNum: "",
         billDate: "",
-        termDueDate: ""
+        termDueDate: "",
+        billMode : "offline"
     }
     const generateInvoice = () => {
         window.open(`/invoice-view?invoiceId=${invoiceInitialState.invoiceId}`, '_blank');
@@ -222,11 +222,7 @@ const Invoice = () => {
 
     const invoiceCustomer = async (invoiceCustomer) => {
         try {
-            const response = await myAxios.post('/api/invoices', invoiceCustomer, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
+            const response = await myAxios.post('/api/invoices', invoiceCustomer);
             setIsInvoiceSaveTriggerd(true);
             if (response.status === 201) { alert('done') }
             //navigate('/invoice/selectproducts')
@@ -247,11 +243,7 @@ const Invoice = () => {
     const [invoices, setInvoices] = useState([]);
     const fetchInvoices = async () => {
         try {
-            const response = await myAxios.get('/api/invoices', {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            })
+            const response = await myAxios.get('/api/invoices')
             setInvoices(response.data);
         } catch (error) {
             alert(error);
@@ -328,6 +320,8 @@ const Invoice = () => {
                                 <tr class="sticky top-0 bg-gray-50 dark:bg-gray-700">
                                     <th scope="col" class="px-6 py-3">PURCHASE</th>
                                     <th scope="col" class="px-6 py-3">AMOUNT</th>
+                                    <th scope="col" class="px-6 py-3">INVOICEMODE</th>
+                                    <th scope="col" class="px-6 py-3">PAYMENTMODE</th>
                                     <th scope="col" class="px-6 py-3">PAYMENT STATUS</th>
                                     <th scope="col" class="px-6 py-3">Details</th>
                                 </tr>
@@ -339,6 +333,8 @@ const Invoice = () => {
                                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                             <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{invoice.customer.name}</th>
                                             <td class="px-6 py-4 text-green-400">{invoice.products.price}</td>
+                                            <td class="px-6 py-4 text-green-500">{invoice.billMode} purchase</td>
+                                            <td class="px-6 py-4 text-green-500">{invoice.paymentMode} </td>
                                             <td class="px-6 py-4 text-green-500">completed</td>
                                             <td><button onClick={()=>{viewInvoice(invoice.invoiceId)}} class="text-gray-800 dark:text-white h-6 rounded p-1">View</button></td>
                                         </tr>
@@ -465,7 +461,7 @@ const Invoice = () => {
                                                             <tr>
                                                                 <td class="border p-2">{index}</td>
                                                                 <td class="border p-2">{cart.length != 0 ? item.name : 'Item details will be added after selecting from inventory'}</td>
-                                                                <td class="border p-2">{item.cartQuantity}</td>
+                                                                <td class="border p-2">{(item.price*item.cartQuantity) / (item.price)}</td>
                                                                 <td class="border p-2">1</td>
                                                                 <td class="border p-2">{item.price}</td>
                                                                 <td class="border p-2">{item.cartQuantity * item.price}</td>
@@ -693,7 +689,7 @@ const Invoice = () => {
                                                             {product.quantity >= 1 ? (
                                                                 <input
                                                                     type="number"
-                                                                    value={cartquantity}
+                                                                    value={cartQuantity}
                                                                     onChange={handleInputChange}
                                                                     min="1"
                                                                     placeholder=""

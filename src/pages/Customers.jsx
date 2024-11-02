@@ -209,7 +209,7 @@ const Customers = () => {
           <div class="relative p-4 w-full max-w-2xl max-h-full bg-white">
             <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
               <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                Update Entry
+                Update Customer
               </h3>
               <div className='flex gap-4'>
                 <button data-modal-target="popup-delete-customer"

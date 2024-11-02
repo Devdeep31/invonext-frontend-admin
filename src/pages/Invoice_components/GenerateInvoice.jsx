@@ -93,7 +93,7 @@ const GenerateInvoice = () => {
                                 <tr key={index}>
                                     <td className="border border-gray-300 px-4 py-2">{index + 1}</td>
                                     <td className="border border-gray-300 px-4 py-2">{item.name}</td>
-                                    <td className="border border-gray-300 px-4 py-2">{item.cartQuantity}</td>
+                                    <td className="border border-gray-300 px-4 py-2">{invoiceData.totalAmount / (item.price)}</td>
                                     <td className="border border-gray-300 px-4 py-2">₹{item.price}</td>
                                     <td className="border border-gray-300 px-4 py-2">₹{item.cartQuantity * item.price}</td>
                                 </tr>

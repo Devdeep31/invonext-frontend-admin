@@ -5,7 +5,7 @@ import { Navigate, redirect, useNavigate } from "react-router-dom";
 
 export const Login = () => {
 
-    const navigate = useNavigate(); //To redirect page . . .
+    const navigateToAdminDash = useNavigate(); //To redirect page . . .
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -21,9 +21,10 @@ export const Login = () => {
         try {
             const response = await myAxios.post('/login', body);
             localStorage.setItem('token', response.data.token);
-            if(response.status === 200){
-                navigate('/dashboard');
-            }
+            //localStorage.setItem('userid',response.data.id);
+            
+                navigateToAdminDash('/dashboard');
+            
         } catch (error) {
             alert('Login Failed !')
         }
@@ -65,6 +66,12 @@ export const Login = () => {
                                     <a href="#" class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot password?</a>
                                 </div>
                                 <button type="submit" class="w-full text-black dark:text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Sign in</button>
+
+                                <button type="button" onClick={
+                                    ()=>{window.location.href = "http://localhost:9000/oauth2/authorization/google"}
+                                } 
+                                className="flex bg-gray-200 p-2 text-sm m-auto rounded-lg"><img className="h-6" src="https://logos-world.net/wp-content/uploads/2020/09/Google-Symbol.png"></img>Sign in with google</button>
+
                                 <p class="text-sm font-light text-gray-500 dark:text-gray-400">
                                     Don’t have an account yet? <a href="#" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</a>
                                 </p>

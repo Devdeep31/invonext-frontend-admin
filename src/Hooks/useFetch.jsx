@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios';
 import { myAxios } from '../services/Helper';
 
-export default function useFetch(url) {
+export default function useFetchBasic(url) {
     const [data, setData] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);

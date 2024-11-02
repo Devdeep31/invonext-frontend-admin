@@ -300,7 +300,10 @@ const Inventory = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {currentCategories.map((category, index) => (
+                                            {currentCategories.length !== 0 ?
+
+                                            
+                                           ( currentCategories.map((category, index) => (
                                                 <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                                     <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                         {category.category_name}
@@ -317,7 +320,7 @@ const Inventory = () => {
                                                     </td>
 
                                                 </tr>
-                                            ))}
+                                            ))) : (<h1 className='text-center'>No category added</h1>)}
                                         </tbody>
                                     </table>
                                 </div>
@@ -578,7 +581,7 @@ const Inventory = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {currentProducts.map((product, index) => (
+                                            {currentProducts.length !== 0 ? ( currentProducts.map((product, index) => (
                                                
                                                 <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                                     <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -598,7 +601,7 @@ const Inventory = () => {
                                                             className="text-gray-800 dark:text-white h-6 rounded p-1">Edit</button>
                                                     </td>
                                                 </tr>
-                                            ))}
+                                            ))):(<h2>No products addded</h2>)}
                                         </tbody>
                                     </table>
                                 </div>
