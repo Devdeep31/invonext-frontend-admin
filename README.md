@@ -23,11 +23,6 @@ This section covers the client-facing part of the application. Here, users can v
   - The login page for users to access their accounts and begin shopping.
   - 
  
-
-- **Product Listing**
-  ![Products](screenshots/products.png)
-  - A detailed view of the products available in the shop, categorized by various filters.
- 
   ![Shop Cart Home](screenshots/shopcarthome2.png)
   - The main shop page where clients can browse through different products.
 
