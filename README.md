@@ -18,10 +18,6 @@ This section covers the client-facing part of the application. Here, users can v
 
 ### Client Site Screenshots
 
-
-  
-
-- **Shop Cart Home**
 - **Shop Cart Login**
   ![Shop Cart Login](screenshots/shopcartlogin.png)
   - The login page for users to access their accounts and begin shopping.
