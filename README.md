@@ -20,10 +20,10 @@
 ![Expense](screenshots/expense.png)
 
 ### Invoice
-![Invoice](screenshots/invoicesPage.png)
+![Invoice](screenshots/invociesPage.png)
 
 ### Invoice Generate
-![Invoice](screenshots/invoiceGenerate.png)
+![Invoice](screenshots/invoiceGenertae.png)
 
 ### Inventory
 ![Inventory](screenshots/inventory.png)
