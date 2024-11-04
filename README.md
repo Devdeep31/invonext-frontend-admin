@@ -5,7 +5,7 @@
 ## Screenshots
 
 ### Dashboard Page
-![Dashboard Page](screenshots/Landingpage.png)
+![Dashboard Page](Resources/screenshots/Landingpage.png)
 
 ### Overall View
 ![Over all view](screenshots/overall_look.png)
