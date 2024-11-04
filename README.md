@@ -10,6 +10,18 @@
 ### Overall View
 ![Over all view](screenshots/overall_look.png)
 
+### ShopCart Login
+![ShopCart Login](screenshots/shopcartlogin.png)
+
+### ShopCart View
+![ShopCart](screenshots/shopcart.png)
+
+### ShopCart View 2
+![ShopCart](screenshots/shopcarthome2.png)
+
+### ShopCart Cart
+![ShopCart](screenshots/shopcart_cart.png)
+
 ### Cashbook
 ![Cashbook](screenshots/cashbook.png)
 
@@ -20,10 +32,10 @@
 ![Expense](screenshots/expense.png)
 
 ### Invoice
-![Invoice](screenshots/invociesPage.png)
+![Invoice](screenshots/invoicePage.png)
 
 ### Invoice Generate
-![Invoice](screenshots/invoiceGenertae.png)
+![Invoice](screenshots/invoiceGenerate.png)
 
 ### Inventory
 ![Inventory](screenshots/inventory.png)
