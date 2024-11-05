@@ -1,51 +1,4 @@
-<<<<<<< HEAD
-# InvoNext (Invoice Management System)
 
-
-
-## Screenshots
-
-### Dashboard Page
-![Dashboard Page](screenshots/Landingpage.png)
-
-### Overall View
-![Over all view](screenshots/overall_look.png)
-
-### ShopCart Login
-![ShopCart Login](screenshots/shopcartlogin.png)
-
-### ShopCart View
-![ShopCart](screenshots/shopcart.png)
-
-### ShopCart View 2
-![ShopCart](screenshots/shopcarthome2.png)
-
-### ShopCart Cart
-![ShopCart](screenshots/shopcart_cart.png)
-
-### Cashbook
-![Cashbook](screenshots/cashbook.png)
-
-### Customers
-![Customers](screenshots/customers.png)
-
-### Expense
-![Expense](screenshots/expense.png)
-
-### Invoice
-![Invoice](screenshots/invoicePage.png)
-
-### Invoice Generate
-![Invoice](screenshots/invoiceGenerate.png)
-
-### Inventory
-![Inventory](screenshots/inventory.png)
-
-### Products
-![Products](screenshots/products.png)
-
-
-=======
 # InvoNext (Smart E-commerce management)
 
 - **Over All View**
@@ -137,4 +90,4 @@ This section is designed for administrators to manage the backend, including cus
 ## Screenshots
 
 All the images above are organized in the `screenshots/` folder of the repository. If you want to explore each section in more detail, browse through this folder for additional images.
->>>>>>> ad1949a49c7df06e28df5a9f1b58f0ccdf04e13a
+
