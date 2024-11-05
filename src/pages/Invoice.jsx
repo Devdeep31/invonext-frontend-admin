@@ -327,7 +327,7 @@ const Invoice = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {invoices.map((invoice, index) => (
+                                {invoices.length !== 0 ? (invoices.map((invoice, index) => (
                                     <>
 
                                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -340,7 +340,7 @@ const Invoice = () => {
                                         </tr>
 
                                     </>
-                                ))}
+                                ))) : (<h1>Invoices not found</h1>)}
 
 
 

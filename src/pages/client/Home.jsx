@@ -189,10 +189,6 @@ const ShopHome = () => {
                                                     // Include `userid` on the product object
                                                     const productWithUserId = { ...product, userid: uid };
 
-                                                   
-                                                    console.log("Product with UserID:", productWithUserId);
-
-                                                  
                                                     setCart([...cart, productWithUserId]);
 
                                                   

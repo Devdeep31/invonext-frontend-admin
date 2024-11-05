@@ -38,6 +38,7 @@ export default function CashBook() {
     const dataRef = useRef(data);
 
 useEffect(() => {
+    initFlowbite();
     dataRef.current = data; // Update the ref whenever `data` changes
 }, [data,currentPage]);
 
@@ -54,14 +55,11 @@ const getCashbooks = async () => {
     }
 };
 
-    useEffect(() => {
-        
-        getCashbooks()
+    useEffect(() => {    
+        getCashbooks();
+    }, []);
 
-        initFlowbite();
-
-
-    }, [currentPage]);
+   
 
 
     //const [customers, setCustomers] = useState([]);
@@ -122,6 +120,7 @@ const getCashbooks = async () => {
                     Authorization: `Bearer ${token}`
                 }
             });
+            getCashbooks();
             
             if (response.status === 201) {
                 alert("done");
@@ -144,6 +143,7 @@ const getCashbooks = async () => {
             }
 
             );
+            getCashbooks();
             setSelectedNote(response.data);
             // console.log(selectedNote.amount);
             //alert('edit note run'+selectedNote.amount);
@@ -159,6 +159,7 @@ const getCashbooks = async () => {
                     Authorization: `Bearer ${token}`
                 }
             });
+            getCashbooks();
             alert('updated ' + response.status)
         } catch (error) {
             alert("something went wrong : " + error);
@@ -282,7 +283,7 @@ const getCashbooks = async () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {currentEntries.map((e) => (
+                                    {currentEntries.length !== 0 ? (currentEntries.map((e) => (
                                         <tr key={e.cashbook_id} class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                             <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                 {e.description}
@@ -310,7 +311,7 @@ const getCashbooks = async () => {
                                                 </button>
                                             </td>
                                         </tr>
-                                    ))}
+                                    ))):(<h1>Cashbook entries not found</h1>)}
                                 </tbody>
                             </table>
                             {/* Modal for edit entries */}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Dropdown from '../components/scripts/Dropdown';
 import { initFlowbite } from 'flowbite'
 import useFetch from '../components/Axios/useFetch'
@@ -30,11 +30,35 @@ const Inventory = () => {
     // const { isOpen, toggleDropdown, dropdownRef } = Dropdown();
 
     const [categories, setCategories] = useState([]);
-    const [categories_data, error, loading] = useFetch('api/products/category/getAllCategories');
+   // const [categories_data, error, loading] = useFetch('api/products/category/getAllCategories');
     const [products, setProducts] = useState([]);
-    const [products_data, product_error, product_loading] = useFetch('api/products/products');
+    //const [products_data, product_error, product_loading] = useFetch('api/products/products');
 
-    //Extra Hook to handle update changes
+    const fetchCategories=async()=>{
+        try{
+            const response = await myAxios.get('api/products/category/getAllCategories',{
+                headers : {
+                    Authorization : `Bearer ${token}`
+                }
+            });
+            setCategories(response.data);
+        }catch(error){
+            alert(error);
+        }
+    }
+
+    const fetchProducts=async()=>{
+        try{
+            const response = await myAxios.get('api/products/products',{
+                headers : {
+                    Authorization : `Bearer ${token}`
+                }
+            });
+            setProducts(response.data);
+        }catch(error){
+            alert(error);
+        }
+    }
 
 
     const [selectedCategory, setSelectedCategory] = useState({});
@@ -187,6 +211,7 @@ const Inventory = () => {
                     Authorization: `Bearer ${token}`
                 }
             });
+            fetchProducts();
             alert('Product added');
         } catch (error) {
             alert(error)
@@ -215,23 +240,45 @@ const Inventory = () => {
                     Authorization: `Bearer ${token}`
                 }
             });
+            fetchProducts();
             alert('Product updated');
         } catch (error) {
             alert(error);
         }
     }
 
+    const deleteProduct = async(productid)=>{
+        try{
+            const response = await myAxios.delete(`/api/products/delete/${productid}`,{
+                headers : {
+                    Authorization : `Bearer ${token}`
+                }
+            });
+            fetchProducts();
+            if(response.status === 200){
+                alert(`product ${selectedProduct.name} is deleted`)
+            }
+        }catch(error){
+            alert(error);
+        }
+    }
+
+    
+
 
     useEffect(() => {
-        initFlowbite();
-        if (categories_data) {
-            setCategories(categories_data);
-        }
-        if (products_data) {
-            setProducts(products_data);
-        }
+        
+        fetchCategories();
+        fetchProducts();
 
-    }, [categories_data, products_data, products, categories]); // Re-run the effect when activeTab changes
+    }, []); // Re-run the effect when activeTab changes
+
+    const dataRef = useRef(currentProducts,currentCategories);
+
+    useEffect(()=>{
+        dataRef.current = (currentProducts,currentCategories);
+        initFlowbite();
+    },[currentProductPage,currentCategoryPage]);
 
 
 
@@ -614,12 +661,17 @@ const Inventory = () => {
                                             <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                                                 Update Product
                                             </h3>
+                                            <div className='flex gap-2'>
+                                            <button
+                                            onClick={()=>{deleteProduct(selectedProduct.productid)}}
+                                            ><i class='bx bx-trash-alt text-xl text-red-500' /></button>
                                             <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="editProduct-modal">
                                                 <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
                                                 </svg>
                                                 <span class="sr-only">Close modal</span>
                                             </button>
+                                            </div>
                                         </div>
                                         <Formik
                                             initialValues={selectedProduct}

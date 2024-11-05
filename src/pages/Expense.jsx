@@ -1,7 +1,91 @@
 import { initFlowbite } from 'flowbite'
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { myAxios } from '../services/Helper';
 
 const Expense = () => {
+    const token = localStorage.getItem('token');
+    const [expenseCategories, setExpenseCategories] = useState([]);
+    const [expenseItems, setExpenseItems] = useState([]);
+    const [expenses, setExpenses] = useState([]);
+
+    const fetchExpenseCategories=async()=>{
+        try{
+            const response = await myAxios.get('api/categories',{
+                headers : {
+                    Authorization : `Bearer ${token}`
+                }
+            });
+            setExpenseCategories(response.data);
+        }catch(error){
+            alert(error);
+        }
+    }
+
+    const fetchExpenseItems=async()=>{
+        try{
+            const response = await myAxios.get('api/items',{
+                headers : {
+                    Authorization : `Bearer ${token}`
+                }
+            });
+            setExpenseItems(response.data);
+        }catch(error){
+            alert(error);
+        }
+    }
+
+    const FetchExpenses=async()=>{
+        try{
+            const response = await myAxios.get('api/expenses',{
+                headers : {
+                    Authorization : `Bearer ${token}`
+                }
+            });
+            setExpenses(response.data);
+        }catch(error){
+            alert(error);
+        }
+    }
+
+    const addExpenseCategory=async(val)=>{
+        try{
+            const response = await myAxios.post('',val,{
+                headers : {
+                    Authorization : `Bearer ${token}`
+                }
+            });
+            fetchExpenseCategories();
+        }catch(error){
+            alert(error);
+        }
+    }
+
+    const addExpenseItem =async(val)=>{
+        try{
+            const response = await myAxios.post('',val,{
+                headers : {
+                    Authorization : `Bearer ${token}`
+                }
+            });
+            fetchExpenseItems();
+        }catch(error){
+            alert(error);
+        }
+    }
+
+    const addExpense =async(val)=>{
+        try{
+            const response = await myAxios.post('',val,{
+                headers : {
+                    Authorization : `Bearer ${token}`
+                }
+            });
+            FetchExpenses();
+        }catch(error){
+            alert(error);
+        }
+    }
+
     useEffect(() => {
         initFlowbite();
     }, []);
@@ -48,18 +132,24 @@ const Expense = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                            {expenses.length !== 0 ? (
+                                expenses.map((expense,index)=>(
+                                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    food
+                                    {expense.item.itemname}
                                     {/*Category
                                         Date
                                     */}
                                 </th>
                                 <td class="px-6 py-4">
-                                    1000
+                                    {expense.item.itemprice}
                                 </td>
 
                             </tr>
+
+                                ))
+                            ):(<h1>Expense not found.</h1>)}
+                            
                         </tbody>
                     </table>
                     <div class="text-center flex justify-end">

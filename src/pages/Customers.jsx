@@ -61,14 +61,15 @@ const Customers = () => {
   const dataRef = useRef(customers);
 
   useEffect(() => {
+    initFlowbite();
     dataRef.current = customers; // Update the ref whenever `data` changes
   }, [filteredCustomers, currentPage]);
 
   // Fetch customers when component mounts
   useEffect(() => {
-    initFlowbite();
+    
     fetchCustomers();
-  }, [currentPage]); // No dependencies required here
+  }, []); // No dependencies required here
 
   // Save a customer
 
@@ -173,7 +174,7 @@ const Customers = () => {
               </tr>
             </thead>
             <tbody>
-              {currentCustomers.map((customer, index) => (
+              {currentCustomers.length !== 0 ? (currentCustomers.map((customer, index) => (
                 <>
 
                   <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={customer.id}>
@@ -192,7 +193,7 @@ const Customers = () => {
                     </td>
                   </tr>
                 </>
-              ))}
+              ))) : (<h1>Customers not found</h1>)}
             </tbody>
           </table>
 
