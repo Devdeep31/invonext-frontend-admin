@@ -91,3 +91,8 @@ This section is designed for administrators to manage the backend, including cus
 
 All the images above are organized in the `screenshots/` folder of the repository. If you want to explore each section in more detail, browse through this folder for additional images.
 
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+
+
