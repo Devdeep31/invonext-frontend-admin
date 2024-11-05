@@ -37,29 +37,30 @@ export default function CashBook() {
 
     const dataRef = useRef(data);
 
-useEffect(() => {
-    initFlowbite();
-    dataRef.current = data; // Update the ref whenever `data` changes
-}, [data,currentPage]);
+    useEffect(() => {
+        initFlowbite();
+        fetchTotalTransactions();
+        dataRef.current = data; // Update the ref whenever `data` changes
+    }, [data, currentPage]);
 
-const getCashbooks = async () => {
-    try {
-        const response = await myAxios.get('/api/cashbook/cashbooks', {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-        setData(response.data);
-    } catch (error) {
-        alert(error);
-    }
-};
+    const getCashbooks = async () => {
+        try {
+            const response = await myAxios.get('/api/cashbook/cashbooks', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            setData(response.data);
+        } catch (error) {
+            alert(error);
+        }
+    };
 
-    useEffect(() => {    
+    useEffect(() => {
         getCashbooks();
     }, []);
 
-   
+
 
 
     //const [customers, setCustomers] = useState([]);
@@ -121,7 +122,8 @@ const getCashbooks = async () => {
                 }
             });
             getCashbooks();
-            
+            fetchTotalTransactions();
+
             if (response.status === 201) {
                 alert("done");
                 console.log("Done");
@@ -142,6 +144,7 @@ const getCashbooks = async () => {
                 }
             }
 
+
             );
             getCashbooks();
             setSelectedNote(response.data);
@@ -160,22 +163,37 @@ const getCashbooks = async () => {
                 }
             });
             getCashbooks();
-            alert('updated ' + response.status)
+            fetchTotalTransactions();
         } catch (error) {
             alert("something went wrong : " + error);
         }
     }
 
-    const deleteEntry=async(val)=>{
-        try{
-            const response = await myAxios.delete('/api/cashbook/delete/'+val,{
-                headers : {
-                    Authorization : `Bearer ${token}`
+    const deleteEntry = async (val) => {
+        try {
+            const response = await myAxios.delete('/api/cashbook/delete/' + val, {
+                headers: {
+                    Authorization: `Bearer ${token}`
                 }
             })
             getCashbooks();
-            if(response.status === 200){alert('Entry deleted')}
-        }catch(error){
+            fetchTotalTransactions();
+            if (response.status === 200) { alert('Entry deleted') }
+        } catch (error) {
+            alert(error);
+        }
+    }
+    const [totalTransaction, setTotalTransactions] = useState({});
+    //fetch cashbook transactional data
+    const fetchTotalTransactions = async () => {
+        try {
+            const response = await myAxios.get('/api/cashbook/data', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            setTotalTransactions(response.data);
+        } catch (error) {
             alert(error);
         }
     }
@@ -190,8 +208,8 @@ const getCashbooks = async () => {
                         <div className="p-2 w-full  text-left rtl:text-right text-gray-500 dark:text-gray-400 text-xs text-slate-500 uppercase  dark:text-slate-500 flex gap-4 font-bold">
 
 
-                            <h1 className="text-xl">Total Balance <span className="text-green-500">₹100,000.00</span></h1>
-                            <h1 className='text-xl'>Todays Balance <span className="text-green-500"> ₹10,000.00</span></h1>
+                            <h1 className="text-xl">Total In Balance <span className="text-green-500">{totalTransaction.totalIn}</span></h1>
+                            <h1 className='text-xl'>Todays Out Balance <span className="text-red-500"> {totalTransaction.totalOut}</span></h1>
 
 
 
@@ -311,7 +329,7 @@ const getCashbooks = async () => {
                                                 </button>
                                             </td>
                                         </tr>
-                                    ))):(<h1>Cashbook entries not found</h1>)}
+                                    ))) : (<h1>Cashbook entries not found</h1>)}
                                 </tbody>
                             </table>
                             {/* Modal for edit entries */}
@@ -322,7 +340,7 @@ const getCashbooks = async () => {
 
 
 
-                            
+
                             {/* Modal for edit cashbook entries */}
                             <div id="editEntries-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
 
@@ -346,31 +364,32 @@ const getCashbooks = async () => {
 
 
                                         <div id="popup-delete-entry" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                                <div class="relative p-4 w-full max-w-md max-h-full">
-                                    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                                        <button type="button" class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="popup-delete-entry">
-                                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                                            </svg>
-                                            <span class="sr-only">Close modal</span>
-                                        </button>
-                                        <div class="p-4 md:p-5 text-center">
-                                            <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                                            </svg>
-                                            <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Are you sure you want to delete this entry?</h3>
-                                            <button
-                                                onClick={()=>{deleteEntry(selectedNote.cashbook_id)
-                                                    
-                                                }}
-                                                data-modal-hide="popup-delete-entry" type="button" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
-                                                Yes, I'm sure
-                                            </button>
-                                            <button data-modal-hide="popup-delete-entry" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">No, cancel</button>
+                                            <div class="relative p-4 w-full max-w-md max-h-full">
+                                                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                                                    <button type="button" class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="popup-delete-entry">
+                                                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                                        </svg>
+                                                        <span class="sr-only">Close modal</span>
+                                                    </button>
+                                                    <div class="p-4 md:p-5 text-center">
+                                                        <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                                        </svg>
+                                                        <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Are you sure you want to delete this entry?</h3>
+                                                        <button
+                                                            onClick={() => {
+                                                                deleteEntry(selectedNote.cashbook_id)
+
+                                                            }}
+                                                            data-modal-hide="popup-delete-entry" type="button" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
+                                                            Yes, I'm sure
+                                                        </button>
+                                                        <button data-modal-hide="popup-delete-entry" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">No, cancel</button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
 
                                     </div>
                                     {/* <!-- Modal content --> */}
