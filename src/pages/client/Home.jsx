@@ -146,7 +146,7 @@ const ShopHome = () => {
                     </svg>
                     <span className="sr-only">Close menu</span>
                 </button>
-                <p className="max-w-lg mb-6 text-sm text-gray-500 dark:text-gray-400">Supercharge your hiring by taking advantage of our <a href="#" className="text-blue-600 underline font-medium dark:text-blue-500 hover:no-underline">limited-time sale</a> for Flowbite Docs + Job Board.</p>
+               {/* Main content */}
             </div>
 
             <div>
