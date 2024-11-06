@@ -42,12 +42,12 @@ function App() {
           <Route path='/staff' element={<Staff />} />
         </Route>
 
-        <Route path='/shopnext/login' element={<ShopNextLogin />} />
+        <Route path='/shopcart' element={<ShopNextLogin />} />
         <Route element={<ClientApplication />}>
           {/* Pass addToCart and cart as props to ShopHome and Cart */}
           <Route path='/shopcart/home' element={<ShopHome />} />
           <Route path='/shopcart/orders' element={<Orders />} />
-          <Route path='shopcart/cart' element={<Cart />} />
+          <Route path='/shopcart/cart' element={<Cart />} />
         </Route>
       </Routes>
     </Router>

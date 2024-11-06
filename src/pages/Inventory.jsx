@@ -715,11 +715,12 @@ const Inventory = () => {
                                                         </label>
                                                         <Field as="select" name="category" id="category" onChange={handleChange} className="form-select rounded-xl">
                                                             <option value="" label="Select category" />
-                                                            {categories.map((category, index) => (
+                                                            {categories.length !== 0 ? (categories.map((category, index) => (
                                                                 <option key={index} value={category.category_name}>
                                                                     {category.category_name}
                                                                 </option>
-                                                            ))}
+                                                            ))) : (<h1>Categories not found</h1>)}
+                                                            
                                                         </Field>
 
                                                         {/* Show validation error */}

@@ -44,6 +44,11 @@ const GenerateInvoice = () => {
         return <div>Loading...</div>;
     }
 
+    //cart total
+
+   //const itemQuantity = invoiceData.totalAmount / (item.price)
+   //const total = itemQuantity * 
+
     return (
         <>
             <div className="p-2">
@@ -95,7 +100,7 @@ const GenerateInvoice = () => {
                                     <td className="border border-gray-300 px-4 py-2">{item.name}</td>
                                     <td className="border border-gray-300 px-4 py-2">{invoiceData.totalAmount / (item.price)}</td>
                                     <td className="border border-gray-300 px-4 py-2">₹{item.price}</td>
-                                    <td className="border border-gray-300 px-4 py-2">₹{item.cartQuantity * item.price}</td>
+                                    <td className="border border-gray-300 px-4 py-2">₹</td>
                                 </tr>
                             ))}
                         </tbody>

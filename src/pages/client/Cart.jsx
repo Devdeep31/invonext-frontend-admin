@@ -2,11 +2,12 @@ import { useEffect, useState, useRef } from "react";
 import { initFlowbite } from 'flowbite'
 import { myAxios } from "../../services/Helper";
 import useFetch from "../../Hooks/useFetch";
-
+//TODO -- there is bug in cart product quantity is not getting in product array -*
 const Cart = () => {
     const userid = localStorage.getItem('useremail');
     const token = localStorage.getItem('token');
-    const [quantity, setQuantiy] = useState('');
+    const [quantity, setQuantity] = useState('');
+    //console.log(quantity);
     const [cart, setCart] = useState([]);
     //const [custDetails, setCustDetails] = useState({});
     const [paymentMode, setPaymentMode] = useState('');
@@ -29,7 +30,7 @@ const Cart = () => {
             productid: product.productid,
             name: product.name,
             price: product.price,
-            quantity: product.cartQuantity, // Quantity should come from cart item
+            cartQuantity: product.cartQuantity, // Quantity should come from cart item
             image: product.image,
             description: product.description,
             category: product.category
@@ -72,7 +73,7 @@ const Cart = () => {
         category: ""
 
     }
-    const setQuantity = async (cartid) => {
+    const updateQuantity = async (cartid) => {
         try {
             const id = parseInt(cartid, 10);
             const response = await myAxios.put(`/api/carts/${id}`, cartIntialState);
@@ -98,14 +99,14 @@ const Cart = () => {
     console.log('invoice id ' + invoiceID);
 
     const generateInvoiceId = () => {
-        const id = "INXT" + Math.floor((Math.random() * 100000000) + 1);
-        setInvoiceID(id);
+        const invoiceid = "INXT" + Math.floor((Math.random() * 100000000) + 1);
+        setInvoiceID(invoiceid);
     };
 
     const invoiceCustomer = async () => {
         try {
             const invoiceData = {
-                invoiceId: "INXT" + Math.floor((Math.random() * 100000000) + 1),
+                invoiceId: invoiceID,
                 customer: {
                     customerid: custDetails.customerid,
                     name: custDetails.name,
@@ -139,27 +140,33 @@ const Cart = () => {
     };
 
     const placeOrder = async () => {
+        if (loading || !custDetails) {
+            alert("Customer details are not loaded yet.");
+            return;
+        }
         generateInvoiceId();
-        await new Promise(resolve => setTimeout(resolve, 100));
         filterCartData();
-        await invoiceCustomer(); 
     };
+    
 
     const dataRef = useRef(cart);
 
 
     useEffect(() => {
-
         fetchCart();
-        
-
     }, []);
 
     useEffect(() => {
-        dataRef.current = cart;
+        dataRef.current = (cart);
         initFlowbite();
+        
+    }, [custDetails, cart,cartData]);
 
-    }, [custDetails, cart]);
+    useEffect(() => {
+        if (cartData.length > 0 && invoiceID) {
+            invoiceCustomer(); // Only call this when cartData is populated
+        }
+    }, [cartData, invoiceID]);
 
 
     return (
@@ -191,7 +198,7 @@ const Cart = () => {
                                 <div className='p-4 text-sm text-gray-500 truncate dark:text-gray-400 px-4'>
                                     <input
                                         type="number"
-                                        onChange={(e) => { setQuantiy(e.target.value) }}
+                                        onChange={(e) => { setQuantity(e.target.value) }}
                                         min="1"
                                         placeholder=""
                                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-20 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
@@ -202,7 +209,7 @@ const Cart = () => {
                                 {product.quantity >= 1 ? (
                                     <button
                                         onClick={() => {
-                                            setQuantity(product.id)
+                                            updateQuantity(product.id)
 
                                         }}
                                         type="button"

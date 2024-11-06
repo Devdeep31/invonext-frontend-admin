@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import '../styles/style.css';
 import 'flowbite';
 import { initFlowbite } from 'flowbite'
@@ -252,9 +252,15 @@ const Invoice = () => {
 
     //to work flowbite in chromiam based browsers . . 
     useEffect(() => {
-        initFlowbite();
+       
         fetchInvoices();
-    }, [activeTab, invoices]);
+    }, []);
+
+    const dataRef = useRef(invoices);
+    useEffect(()=>{
+        initFlowbite();
+        dataRef.current = invoices;
+    },[invoices]);
     return (
         <>
 
@@ -335,7 +341,8 @@ const Invoice = () => {
                                             <td class="px-6 py-4 text-green-400">{invoice.products.price}</td>
                                             <td class="px-6 py-4 text-green-500">{invoice.billMode} purchase</td>
                                             <td class="px-6 py-4 text-green-500">{invoice.paymentMode} </td>
-                                            <td class="px-6 py-4 text-green-500">completed</td>
+                                            {invoice.status === 'complete' ? (<td class="px-6 py-4 text-green-500">{invoice.status}</td>):(<td class="px-6 py-4 text-red-500">{invoice.status}</td>)}
+                                            
                                             <td><button onClick={()=>{viewInvoice(invoice.invoiceId)}} class="text-gray-800 dark:text-white h-6 rounded p-1">View</button></td>
                                         </tr>
 

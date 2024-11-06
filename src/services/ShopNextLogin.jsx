@@ -25,7 +25,7 @@ const ShopNextLogin = () => {
             const response = await axios.post('http://localhost:9000/api/customer/login', loginState);
             if (response.status === 202 && response.data.isAuthenticated) {
                 localStorage.setItem('useremail', response.data.email);
-                navigate("/shopnext");
+                navigate("/shopcart/home");
             }
         } catch (error) {
             alert('Login failed!');
