@@ -8,7 +8,7 @@ export default {
   theme: {
     extend: {},
   },
-  darkMode: 'class', // Use 'class' strategy instead of 'media'
+  darkMode: 'class', 
   plugins: [
     // require('flowbite/plugin')({
     //   charts : true,

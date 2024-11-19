@@ -1,0 +1,17 @@
+FROM node:latest
+
+WORKDIR /Frontened
+
+COPY . .
+
+COPY package.json package-lock.json
+
+RUN npm install 
+
+RUN npx tailwindcss init -p && \
+    npm install tailwindcss postcss autoprefixer && \
+    npm install flowbite
+
+EXPOSE 3000
+
+CMD ["npm","start"]
